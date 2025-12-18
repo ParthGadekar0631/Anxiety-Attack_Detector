@@ -1,4 +1,4 @@
-﻿import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export interface ICheckin extends Document {
   user: Types.ObjectId;

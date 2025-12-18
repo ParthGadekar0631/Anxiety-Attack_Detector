@@ -1,4 +1,4 @@
-﻿import NextAuth from 'next-auth';
+import NextAuth from 'next-auth';
 import { UserRole } from './api';
 
 declare module 'next-auth' {

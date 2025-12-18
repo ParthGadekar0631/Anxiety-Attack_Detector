@@ -1,4 +1,4 @@
-﻿import morgan from 'morgan';
+import morgan from 'morgan';
 import { createLogger, format, transports } from 'winston';
 import { env } from '../config/env';
 

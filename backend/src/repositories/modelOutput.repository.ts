@@ -1,4 +1,4 @@
-﻿import { ModelOutputModel } from '../models/modelOutput.model';
+import { ModelOutputModel } from '../models/modelOutput.model';
 
 export class ModelOutputRepository {
   create(data: Parameters<typeof ModelOutputModel.create>[0]) {

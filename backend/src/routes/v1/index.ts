@@ -1,4 +1,4 @@
-﻿import { Router } from 'express';
+import { Router } from 'express';
 import { authRoutes } from './auth.routes';
 import { checkinRoutes } from './checkin.routes';
 import { analyticsRoutes } from './analytics.routes';

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { format } from 'date-fns';
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';

@@ -1,4 +1,4 @@
-﻿import type { AnxietyCheckinPayload, PatientSummary } from '@/types/api';
+import type { AnxietyCheckinPayload, PatientSummary } from '@/types/api';
 import { authHeaders, http } from './http';
 
 export async function fetchPatientSummary(accessToken: string) {

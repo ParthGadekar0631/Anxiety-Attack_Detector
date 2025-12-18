@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { LoadingState } from '@/components/common/LoadingState';
 import { ErrorState } from '@/components/common/ErrorState';

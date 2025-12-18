@@ -1,4 +1,4 @@
-﻿import { analyticsRepository } from '../repositories/analytics.repository';
+import { analyticsRepository } from '../repositories/analytics.repository';
 import { checkinRepository } from '../repositories/checkin.repository';
 
 export class AnalyticsService {

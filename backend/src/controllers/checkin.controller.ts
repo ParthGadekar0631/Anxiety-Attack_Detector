@@ -1,4 +1,4 @@
-﻿import { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { checkinService } from '../services/checkin.service';
 import { HttpStatus } from '../utils/httpStatus';
 

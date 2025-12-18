@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
@@ -10,7 +10,7 @@ import { ErrorState } from '@/components/common/ErrorState';
 import { fetchProviderPatients } from '@/services/provider';
 
 export function ProviderDashboard() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const accessToken = session?.accessToken;
 
   const { data: patients, isLoading, isError } = useQuery({
@@ -18,6 +18,10 @@ export function ProviderDashboard() {
     queryFn: () => fetchProviderPatients(accessToken ?? ''),
     enabled: Boolean(accessToken),
   });
+
+  if (status === 'loading') {
+    return <LoadingState label="Loading session" />;
+  }
 
   if (!accessToken) {
     return <ErrorState message="Unable to determine your session. Please sign in again." />;

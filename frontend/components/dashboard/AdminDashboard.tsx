@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
@@ -10,7 +10,7 @@ import { ErrorState } from '@/components/common/ErrorState';
 import { fetchAdminAnalytics, fetchUsers } from '@/services/admin';
 
 export function AdminDashboard() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const accessToken = session?.accessToken;
 
   const analyticsQuery = useQuery({
@@ -24,6 +24,10 @@ export function AdminDashboard() {
     queryFn: () => fetchUsers(accessToken ?? ''),
     enabled: Boolean(accessToken),
   });
+
+  if (status === 'loading') {
+    return <LoadingState label="Loading session" />;
+  }
 
   if (!accessToken) {
     return <ErrorState message="Unable to determine your session. Please sign in again." />;
@@ -59,7 +63,7 @@ export function AdminDashboard() {
               {analytics.recentHighRisk.map((entry) => (
                 <li key={entry.id} className="flex items-center justify-between rounded-md border border-danger/20 bg-danger/5 px-4 py-2 text-sm text-danger">
                   <span>
-                    {entry.user?.name ?? 'Unknown user'} · {new Date(entry.createdAt).toLocaleString()}
+                    {entry.user?.name ?? 'Unknown user'} - {new Date(entry.createdAt).toLocaleString()}
                   </span>
                   <RiskBadge level="high" />
                 </li>

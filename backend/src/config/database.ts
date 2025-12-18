@@ -1,4 +1,4 @@
-﻿import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { env } from './env';
 import { logger } from '../utils/logger';
 

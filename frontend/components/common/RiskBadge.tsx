@@ -1,4 +1,4 @@
-﻿import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import type { RiskLevel } from '@/types/api';
 
 const variantMap: Record<RiskLevel, 'success' | 'warning' | 'danger' | 'neutral'> = {

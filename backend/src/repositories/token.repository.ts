@@ -1,4 +1,4 @@
-﻿import { TokenModel } from '../models/token.model';
+import { TokenModel } from '../models/token.model';
 
 export class TokenRepository {
   create(data: { user: string; tokenHash: string; expiresAt: Date }) {

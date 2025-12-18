@@ -1,1 +1,1 @@
-﻿export { predictor } from './mockPredictor';
+export { predictor } from './mockPredictor';

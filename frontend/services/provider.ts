@@ -1,4 +1,4 @@
-﻿import type { ProviderPatient } from '@/types/api';
+import type { ProviderPatient } from '@/types/api';
 import { authHeaders, http } from './http';
 
 export async function fetchProviderPatients(accessToken: string) {

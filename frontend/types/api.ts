@@ -1,4 +1,4 @@
-﻿export type UserRole = 'patient' | 'provider' | 'admin';
+export type UserRole = 'patient' | 'provider' | 'admin';
 export type RiskLevel = 'low' | 'medium' | 'high' | 'unknown';
 
 export interface CheckinTrendPoint {

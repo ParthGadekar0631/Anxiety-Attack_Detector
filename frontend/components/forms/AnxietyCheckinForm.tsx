@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -32,20 +32,23 @@ export function AnxietyCheckinForm({ onSubmit, loading }: AnxietyCheckinFormProp
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [triggers, setTriggers] = useState<string[]>([]);
   const [coping, setCoping] = useState<string[]>([]);
-  const [currentTag, setCurrentTag] = useState<{ type: 'symptom' | 'trigger' | 'coping'; value: string }>({
-    type: 'symptom',
-    value: '',
-  });
+  const [symptomInput, setSymptomInput] = useState('');
+  const [triggerInput, setTriggerInput] = useState('');
+  const [copingInput, setCopingInput] = useState('');
 
   const addTag = (type: 'symptom' | 'trigger' | 'coping') => {
-    if (!currentTag.value.trim()) return;
-    const newValue = currentTag.value.trim();
+    const currentValue =
+      type === 'symptom' ? symptomInput : type === 'trigger' ? triggerInput : copingInput;
+    if (!currentValue.trim()) return;
+    const newValue = currentValue.trim();
     const setter = type === 'symptom' ? setSymptoms : type === 'trigger' ? setTriggers : setCoping;
     const list = type === 'symptom' ? symptoms : type === 'trigger' ? triggers : coping;
     if (!list.includes(newValue)) {
       setter([...list, newValue]);
     }
-    setCurrentTag({ type, value: '' });
+    if (type === 'symptom') setSymptomInput('');
+    if (type === 'trigger') setTriggerInput('');
+    if (type === 'coping') setCopingInput('');
   };
 
   const removeTag = (type: 'symptom' | 'trigger' | 'coping', value: string) => {
@@ -80,8 +83,8 @@ export function AnxietyCheckinForm({ onSubmit, loading }: AnxietyCheckinFormProp
         label="Symptoms"
         placeholder="Add a symptom"
         values={symptoms}
-        currentValue={currentTag.type === 'symptom' ? currentTag.value : ''}
-        onChange={(value) => setCurrentTag({ type: 'symptom', value })}
+        currentValue={symptomInput}
+        onChange={setSymptomInput}
         onAdd={() => addTag('symptom')}
         onRemove={(value) => removeTag('symptom', value)}
       />
@@ -90,8 +93,8 @@ export function AnxietyCheckinForm({ onSubmit, loading }: AnxietyCheckinFormProp
         label="Triggers"
         placeholder="Add a trigger"
         values={triggers}
-        currentValue={currentTag.type === 'trigger' ? currentTag.value : ''}
-        onChange={(value) => setCurrentTag({ type: 'trigger', value })}
+        currentValue={triggerInput}
+        onChange={setTriggerInput}
         onAdd={() => addTag('trigger')}
         onRemove={(value) => removeTag('trigger', value)}
       />
@@ -100,8 +103,8 @@ export function AnxietyCheckinForm({ onSubmit, loading }: AnxietyCheckinFormProp
         label="Coping mechanisms"
         placeholder="Add coping mechanism"
         values={coping}
-        currentValue={currentTag.type === 'coping' ? currentTag.value : ''}
-        onChange={(value) => setCurrentTag({ type: 'coping', value })}
+        currentValue={copingInput}
+        onChange={setCopingInput}
         onAdd={() => addTag('coping')}
         onRemove={(value) => removeTag('coping', value)}
       />
@@ -144,7 +147,7 @@ function TagInput({ label, placeholder, values, currentValue, onChange, onAdd, o
           <span key={value} className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
             {value}
             <button type="button" className="ml-2 text-slate-500 hover:text-danger" onClick={() => onRemove(value)}>
-              ×
+              x
             </button>
           </span>
         ))}

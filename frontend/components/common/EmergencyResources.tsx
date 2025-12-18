@@ -1,4 +1,4 @@
-﻿const resources = [
+const resources = [
   { name: 'Crisis Text Line', description: 'Text HOME to 741741 (US/Canada)', type: '24/7 Crisis Support' },
   { name: '988 Suicide & Crisis Lifeline', description: 'Dial 988 from any US phone line', type: 'Emergency' },
   { name: 'SAMHSA Helpline', description: '1-800-662-4357', type: 'Substance Use Support' },

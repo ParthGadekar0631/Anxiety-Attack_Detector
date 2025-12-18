@@ -1,4 +1,4 @@
-﻿import { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface StatCardProps {

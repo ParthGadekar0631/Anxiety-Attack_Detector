@@ -1,4 +1,4 @@
-﻿import CredentialsProvider from 'next-auth/providers/credentials';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import type { NextAuthOptions } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import { loginUser } from '@/services/auth';

@@ -1,4 +1,4 @@
-﻿import type { AdminAnalytics, UserAccount } from '@/types/api';
+import type { AdminAnalytics, UserAccount } from '@/types/api';
 import { authHeaders, http } from './http';
 
 export async function fetchAdminAnalytics(accessToken: string) {

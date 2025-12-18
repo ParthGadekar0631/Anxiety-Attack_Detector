@@ -1,4 +1,4 @@
-﻿import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 export type UserRole = 'patient' | 'provider' | 'admin';
 

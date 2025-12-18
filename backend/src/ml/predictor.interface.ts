@@ -1,4 +1,4 @@
-﻿export interface PredictionInput {
+export interface PredictionInput {
   userId: string;
   anxietyLevel: number;
   symptoms: string[];

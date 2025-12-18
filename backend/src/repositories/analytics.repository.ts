@@ -1,4 +1,4 @@
-﻿import { CheckinModel } from '../models/checkin.model';
+import { CheckinModel } from '../models/checkin.model';
 import { UserModel } from '../models/user.model';
 
 export class AnalyticsRepository {

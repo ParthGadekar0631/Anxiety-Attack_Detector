@@ -1,4 +1,4 @@
-﻿import { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { authService } from '../services/auth.service';
 import { HttpStatus } from '../utils/httpStatus';
 

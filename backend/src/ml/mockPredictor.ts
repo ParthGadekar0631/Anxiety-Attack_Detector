@@ -1,4 +1,4 @@
-﻿import { Predictor, PredictionInput, PredictionOutput } from './predictor.interface';
+import { Predictor, PredictionInput, PredictionOutput } from './predictor.interface';
 
 export class MockPredictor implements Predictor {
   public readonly version = 'v1-mock';

@@ -1,4 +1,4 @@
-﻿import type { AuthResponse, RegisterPayload } from '@/types/api';
+import type { AuthResponse, RegisterPayload } from '@/types/api';
 import { http } from './http';
 
 export async function registerUser(payload: RegisterPayload) {

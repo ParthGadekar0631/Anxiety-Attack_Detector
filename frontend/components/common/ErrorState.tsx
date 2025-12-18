@@ -1,4 +1,4 @@
-﻿interface ErrorStateProps {
+interface ErrorStateProps {
   message?: string;
 }
 

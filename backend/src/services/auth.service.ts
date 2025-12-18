@@ -1,4 +1,4 @@
-﻿import ms from 'ms';
+import ms from 'ms';
 import { userRepository } from '../repositories/user.repository';
 import { tokenRepository } from '../repositories/token.repository';
 import { hashPassword, comparePassword } from '../utils/password';

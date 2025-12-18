@@ -1,4 +1,4 @@
-﻿import { Router } from 'express';
+import { Router } from 'express';
 import { z } from 'zod';
 import { userController } from '../../controllers/user.controller';
 import { authenticate } from '../../middlewares/auth.middleware';

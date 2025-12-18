@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from 'react';
 import { z } from 'zod';
@@ -30,7 +30,7 @@ export function SignUpForm() {
     setSuccess(null);
     try {
       await registerUser(values);
-      setSuccess('Account created successfully. Signing you in…');
+      setSuccess('Account created successfully. Signing you in...');
       await signIn('credentials', { ...values, redirect: false });
       router.push('/dashboard');
     } catch (err) {

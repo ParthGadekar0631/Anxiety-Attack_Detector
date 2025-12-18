@@ -1,4 +1,4 @@
-﻿# Anxiety Attack Detection & Support Platform (AAD)
+# Anxiety Attack Detection & Support Platform (AAD)
 
 A production-ready, full-stack web platform for anxiety tracking that pairs a TypeScript Express API (clean architecture, MongoDB, role-based access) with a Next.js 14 App Router frontend featuring React Query, Tailwind CSS, and NextAuth authentication. The backend exposes RESTful services for patients, providers, and admins, plus a decoupled ML module for future model integration. The frontend delivers role-specific dashboards, daily check-ins, analytics, and emergency resources.
 

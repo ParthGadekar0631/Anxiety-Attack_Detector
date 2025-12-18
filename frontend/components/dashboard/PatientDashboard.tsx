@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
@@ -14,7 +14,7 @@ import { ErrorState } from '@/components/common/ErrorState';
 import { fetchPatientSummary, submitCheckin } from '@/services/patient';
 
 export function PatientDashboard() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const accessToken = session?.accessToken;
   const [lastSubmission, setLastSubmission] = useState<Date | null>(null);
 
@@ -28,6 +28,10 @@ export function PatientDashboard() {
     mutationFn: (payload: Parameters<typeof submitCheckin>[1]) => submitCheckin(accessToken ?? '', payload),
     onSuccess: () => setLastSubmission(new Date()),
   });
+
+  if (status === 'loading') {
+    return <LoadingState label="Loading session" />;
+  }
 
   if (!accessToken) {
     return <ErrorState message="Unable to load access token. Please sign in again." />;
