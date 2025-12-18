@@ -1,0 +1,15 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 min-h-screen antialiased;
+}
+
+.gradient-border {
+  background-image: linear-gradient(120deg, theme('colors.primary'), theme('colors.secondary'));
+}

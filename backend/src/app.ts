@@ -1,4 +1,4 @@
-import 'express-async-errors';
+﻿import 'express-async-errors';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -11,6 +11,7 @@ import { HttpStatus } from './utils/httpStatus';
 
 export const app = express();
 
+app.disable('x-powered-by');
 app.use(helmet());
 app.use(cors({ origin: env.allowedOrigins, credentials: true }));
 app.use(express.json({ limit: '1mb' }));

@@ -1,4 +1,4 @@
-import ms from 'ms';
+﻿import ms from 'ms';
 import { userRepository } from '../repositories/user.repository';
 import { tokenRepository } from '../repositories/token.repository';
 import { hashPassword, comparePassword } from '../utils/password';
@@ -7,6 +7,7 @@ import { HttpStatus } from '../utils/httpStatus';
 import { signAccessToken, signRefreshToken, verifyRefreshToken, JwtPayload } from '../utils/jwt';
 import { env } from '../config/env';
 import type { IUser } from '../models/user.model';
+import { hashToken } from '../utils/token';
 
 interface RegisterDto {
   name: string;
@@ -59,7 +60,8 @@ export class AuthService {
       throw new AppError('Missing refresh token', HttpStatus.BAD_REQUEST);
     }
 
-    const storedToken = await tokenRepository.findByToken(refreshToken);
+    const tokenHash = hashToken(refreshToken);
+    const storedToken = await tokenRepository.findByToken(tokenHash);
     if (!storedToken) {
       throw new AppError('Session expired', HttpStatus.UNAUTHORIZED);
     }
@@ -68,7 +70,7 @@ export class AuthService {
     try {
       payload = verifyRefreshToken(refreshToken);
     } catch (error) {
-      await tokenRepository.deleteByToken(refreshToken);
+      await tokenRepository.deleteByToken(tokenHash);
       throw new AppError('Invalid refresh token', HttpStatus.UNAUTHORIZED);
     }
 
@@ -78,13 +80,13 @@ export class AuthService {
     }
 
     const tokens = await this.issueTokens(user);
-    await tokenRepository.deleteByToken(refreshToken);
+    await tokenRepository.deleteByToken(tokenHash);
     return { user: this.sanitizeUser(user), tokens };
   }
 
   async logout(refreshToken: string) {
     if (refreshToken) {
-      await tokenRepository.deleteByToken(refreshToken);
+      await tokenRepository.deleteByToken(hashToken(refreshToken));
     }
   }
 
@@ -93,16 +95,21 @@ export class AuthService {
     const accessToken = signAccessToken(payload);
     const refreshToken = signRefreshToken(payload);
 
-    const expiresInMs = ms(env.REFRESH_TOKEN_TTL);
-    const expiresAt = new Date(Date.now() + (typeof expiresInMs === 'number' ? expiresInMs : 0));
+    const refreshTtlMs = ms(env.REFRESH_TOKEN_TTL);
+    const accessTtlMs = ms(env.ACCESS_TOKEN_TTL);
+    const expiresAt = new Date(Date.now() + (typeof refreshTtlMs === 'number' ? refreshTtlMs : 0));
 
     await tokenRepository.create({
       user: user.id,
-      token: refreshToken,
+      tokenHash: hashToken(refreshToken),
       expiresAt,
     });
 
-    return { accessToken, refreshToken };
+    return {
+      accessToken,
+      refreshToken,
+      expiresIn: typeof accessTtlMs === 'number' ? accessTtlMs : 15 * 60 * 1000,
+    };
   }
 
   private sanitizeUser(user: IUser) {

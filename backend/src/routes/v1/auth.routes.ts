@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import { z } from 'zod';
 import { authController } from '../../controllers/auth.controller';
 import { validateBody } from '../../middlewares/validation.middleware';

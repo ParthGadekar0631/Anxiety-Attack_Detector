@@ -1,4 +1,4 @@
-import { FilterQuery } from 'mongoose';
+﻿import { FilterQuery } from 'mongoose';
 import { CheckinModel, ICheckin } from '../models/checkin.model';
 
 export class CheckinRepository {

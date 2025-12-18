@@ -1,4 +1,4 @@
-import { FilterQuery } from 'mongoose';
+﻿import { FilterQuery } from 'mongoose';
 import { IUser, UserModel } from '../models/user.model';
 
 export class UserRepository {
