@@ -1,1 +1,0 @@
-export { predictor } from './mockPredictor';
