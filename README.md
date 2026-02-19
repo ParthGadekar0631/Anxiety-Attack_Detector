@@ -1,162 +1,220 @@
-# 🌍 Aad – Intelligent Travel & Booking Platform (In Progress)
+<!-- ===================================================== -->
+<!-- BADGES -->
+<!-- ===================================================== -->
 
-> A full-stack travel and booking platform inspired by modern systems like Expedia — designed with scalability, modular architecture, and AI-driven enhancements in mind.
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Active%20Development-orange" />
+  <img src="https://img.shields.io/badge/AI-ML%20Model-purple" />
+  <img src="https://img.shields.io/badge/Backend-Node.js-brightgreen" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-green" />
+  <img src="https://img.shields.io/badge/Frontend-React-blue" />
+  <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
+</p>
 
----
+<h1 align="center">🧠 Anxiety Attack Detector</h1>
 
-## 🚧 Project Status
+<p align="center">
+  An intelligent early-warning system that detects anxiety attack patterns using behavioral, physiological, and contextual signals.
+</p>
 
-**Current Phase:** Active Development  
-**Stage:** Frontend foundation + Authentication APIs  
-**Backend:** MongoDB (recently migrated)
-
-This project is under continuous development. Features, architecture, and documentation will evolve as the system grows.
-
----
-
-## 🧠 Project Vision
-
-Aad aims to become a scalable travel booking platform that supports:
-
-- Hotel search and booking
-- User authentication & profile management
-- Smart filtering & sorting
-- Dynamic pricing display
-- AI-powered travel recommendations (future phase)
-- Secure payment integration
-- Admin management dashboard
-
-The system is designed using production-level backend structuring and modular frontend architecture.
+<p align="center">
+  🚀 AI-powered • 📊 Real-time monitoring • 🛡️ Preventive intervention
+</p>
 
 ---
 
-## 🏗️ Tech Stack
+# 🌍 Vision
 
-### Frontend
-- React / Next.js
-- Tailwind CSS
-- Axios
-- Context API (Redux upgrade planned if needed)
+Anxiety attacks often escalate rapidly, leaving individuals with little time to react.  
+This project aims to **predict early signs of anxiety escalation** and provide timely intervention support.
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB (Mongoose ODM)
-- JWT Authentication
-- bcrypt for password hashing
-
-### DevOps (Planned)
-- Docker
-- GitHub Actions (CI/CD)
-- AWS / Vercel deployment
+The long-term goal is to build a **preventive AI companion** — not just a tracker, but a proactive mental health assistant.
 
 ---
 
-## 📁 Folder Structure
+# ⚠️ Problem Statement
 
-aad/
+Millions of individuals experience anxiety attacks triggered by:
+
+- Elevated heart rate  
+- Irregular breathing  
+- Stress patterns  
+- Environmental triggers  
+- Behavioral shifts  
+
+Most tools are reactive.  
+This system is designed to be **predictive**.
+
+---
+
+# 🏗️ System Architecture
+
+```
+User Input / Sensor Data
+        │
+        ▼
+Preprocessing Layer
+        │
+        ▼
+ML Prediction Engine
+        │
+        ▼
+Risk Score Generator
+        │
+        ▼
+Intervention Module
+(Alerts • Breathing Guidance • Logging)
+```
+
+Architecture follows a modular AI pipeline for scalability and future wearable integration.
+
+---
+
+# 🧠 Core Features
+
+## 📊 Real-Time Risk Scoring
+- Calculates anxiety risk probability
+- Generates dynamic confidence score
+- Detects early warning signals
+
+---
+
+## 🤖 Machine Learning Engine
+- Supervised classification model
+- Feature-based prediction
+- Supports model retraining
+- Designed for future LSTM/Time-series upgrade
+
+---
+
+## 📈 Behavioral Pattern Tracking
+- Logs stress inputs
+- Tracks triggers
+- Identifies recurring escalation cycles
+
+---
+
+## 🚨 Smart Intervention System
+When elevated risk is detected:
+- Sends alert notification
+- Activates guided breathing module
+- Suggests grounding exercises
+- Logs the episode for analytics
+
+---
+
+## 📂 Historical Insights Dashboard
+- View anxiety trends over time
+- Identify triggers
+- Track frequency & severity
+
+---
+
+# 🛠️ Technology Stack
+
+| Layer | Technologies |
+|--------|-------------|
+| **Frontend** | React / Next.js |
+| **Backend** | Node.js, Express |
+| **Database** | MongoDB |
+| **AI / ML** | Python (Scikit-learn / TensorFlow - Planned Upgrade) |
+| **Data Processing** | NumPy, Pandas |
+| **Authentication** | JWT |
+| **Deployment (Planned)** | Docker, AWS |
+
+---
+
+# 🧪 ML Model Overview
+
+### Input Features (Current Prototype)
+- Self-reported stress level
+- Heart rate (manual input / wearable-ready)
+- Sleep quality
+- Breathing irregularity indicator
+- Trigger event flag
+
+### Output
+- Anxiety risk score (0–100%)
+- Confidence level
+- Escalation probability
+
+### Model Type
+- Logistic Regression (Initial Prototype)
+- Random Forest (Testing Phase)
+- LSTM (Future Roadmap)
+
+---
+
+# 📂 Project Structure
+
+```
+Anxiety-Attack-Detector/
 │
-├── client/                  # Frontend (Next.js)
+├── client/                     # Frontend UI
 │   ├── components/
 │   ├── pages/
-│   ├── styles/
-│   ├── context/
-│   └── utils/
+│   └── dashboard/
 │
-├── server/                  # Backend (Node + Express)
-│   ├── config/
+├── server/                     # Backend API
 │   ├── controllers/
-│   ├── models/
 │   ├── routes/
-│   ├── middleware/
+│   ├── models/
+│   └── middleware/
+│
+├── ml-engine/                  # AI prediction module
+│   ├── model.py
+│   ├── train.py
+│   ├── dataset/
 │   └── utils/
 │
 ├── .env
 ├── package.json
 └── README.md
-
-Structure will expand as new features are introduced.
-
----
-
-## 🔐 Authentication (Current Focus)
-
-### Implemented / In Progress
-- User Signup API
-- User Login API
-- Password hashing with bcrypt
-- JWT-based authentication
-- Basic frontend login/signup pages
-
-### Upcoming Enhancements
-- Email verification
-- Password reset
-- Role-based access (Admin / User)
-- OAuth (Google login)
-
----
-
-## 🏨 Core Features Roadmap
-
-### Phase 1 – Foundation
-- [x] Project setup
-- [x] MongoDB integration
-- [x] User schema
-- [x] Auth APIs
-- [ ] Frontend authentication UI polish
-- [ ] Protected routes
-
-### Phase 2 – Travel Listings
-- [ ] Hotel schema
-- [ ] Search API
-- [ ] Filter by price, rating, location
-- [ ] Pagination
-- [ ] Expedia-style homepage UI
-
-### Phase 3 – Booking System
-- [ ] Booking model
-- [ ] Availability management
-- [ ] Secure checkout
-- [ ] Payment gateway integration
-
-### Phase 4 – AI Enhancements
-- [ ] Personalized recommendations
-- [ ] Travel suggestion engine
-- [ ] Smart sorting logic
-- [ ] Predictive pricing (future scope)
-
----
-
-## ⚙️ Installation Guide
-
-### 1️⃣ Clone Repository
-
-```bash
-git clone https://github.com/yourusername/aad.git
-cd aad
 ```
 
+Structure will evolve as model complexity increases.
+
 ---
 
-### 2️⃣ Backend Setup
+# ⚙️ Installation Guide
+
+## 🔧 Prerequisites
+- Node.js v16+
+- Python 3.9+
+- MongoDB Atlas
+
+---
+
+## 🚀 Backend Setup
 
 ```bash
+git clone https://github.com/yourusername/anxiety-attack-detector.git
 cd server
 npm install
-npm run dev
+npm start
 ```
 
-Create a `.env` file inside `/server`:
+Create `.env` file:
 
 ```
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
+MONGO_URI=your_mongodb_connection
 JWT_SECRET=your_secret_key
 ```
 
 ---
 
-### 3️⃣ Frontend Setup
+## 🧠 ML Engine Setup
+
+```bash
+cd ml-engine
+pip install -r requirements.txt
+python train.py
+```
+
+---
+
+## 💻 Frontend Setup
 
 ```bash
 cd client
@@ -164,101 +222,74 @@ npm install
 npm run dev
 ```
 
-Frontend runs at:
-```
-http://localhost:3000
-```
+---
 
-Backend runs at:
-```
-http://localhost:5000
-```
+# 📡 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|------------|
+| `/api/auth/register` | POST | Register user |
+| `/api/auth/login` | POST | Login user |
+| `/api/predict` | POST | Get anxiety risk score |
+| `/api/history` | GET | Fetch historical data |
+| `/api/log` | POST | Log anxiety event |
 
 ---
 
-## 🔄 API Endpoints (Current)
+# 📊 Current Development Status
 
-### Auth Routes
+### ✅ Phase 1 – Foundation
+- Backend structure setup
+- MongoDB integration
+- Basic prediction endpoint
+- Risk scoring logic
 
-| Method | Endpoint | Description |
-|--------|----------|------------|
-| POST   | /api/auth/signup | Register new user |
-| POST   | /api/auth/login  | Login existing user |
-| GET    | /api/auth/profile | Get user profile (Protected) |
+### 🔄 Phase 2 – ML Enhancement (In Progress)
+- Feature normalization
+- Model accuracy tuning
+- Dataset refinement
 
-More APIs will be added as development progresses.
-
----
-
-## 🧪 Testing Strategy (Planned)
-
-- Unit testing with Jest
-- API testing with Postman
-- Integration tests
-- Load testing (later phase)
+### ⏳ Phase 3 – Smart Intervention System
+- Automated intervention triggers
+- Real-time notifications
+- Guided breathing UI
 
 ---
 
-## 🧱 Architecture Philosophy
+# 🔮 Future Roadmap
 
-- MVC pattern (backend)
-- Clean separation of concerns
-- Scalable database modeling
-- Token-based authentication
-- Reusable frontend components
-- Future-ready architecture for scaling
-
----
-
-## 🎯 Design Inspiration
-
-The homepage and booking flow are inspired by leading travel platforms. Focus areas include:
-
-- Clean search interface
-- Fast filtering
-- Clear pricing
-- Smooth booking funnel
-- Strong UX hierarchy
-
-This is not a clone but a structured, production-oriented implementation.
+- 📱 Wearable device integration (Apple Watch / Fitbit)
+- 🧠 Advanced time-series modeling
+- 🎙 Voice pattern stress detection
+- 📊 Personalized AI adaptation
+- 🛡️ HIPAA-compliant cloud architecture
+- 📈 Predictive relapse modeling
 
 ---
 
-## 🔮 Future Enhancements
+# ⚠️ Disclaimer
 
-- Admin dashboard
-- Analytics tracking
-- AI chatbot for trip planning
-- Multi-city itinerary builder
-- Review & rating system
-- Wishlist feature
-- Push notifications
-- Mobile app version (React Native)
+This system is not a medical diagnostic tool.  
+It is a predictive support system designed to assist users in monitoring anxiety patterns.
+
+For medical emergencies, consult a licensed healthcare professional.
 
 ---
 
-## 👨‍💻 Developer
+# 👨‍💻 Developer
 
-Parth Gadekar  
-Master’s in Computer Science  
-Full-Stack Developer | Backend-Focused
-
----
-
-## 📌 Contribution
-
-Currently under active development.  
-Collaboration may open in later phases.
+**Parth Gadekar**  
+MS Computer Science  
+AI & Full-Stack Developer  
 
 ---
 
-## 📝 Notes
+# 📄 License
 
-This README will be updated as:
+MIT License – Free to use, modify, and distribute.
 
-- Features are completed
-- Architecture evolves
-- Deployment pipeline is integrated
-- AI modules are introduced
+---
 
-The project is being built with production standards in mind.
+<p align="center">
+  Building preventive mental health technology with AI.
+</p>
