@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[64381,["/Anxiety-Attack_Detector/_next/static/chunks/6e9ac5b86215ad1c.js","/Anxiety-Attack_Detector/_next/static/chunks/4e23ab0c08513715.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"buildId":"a5_DOrLkfU8mbFisPk5m0","rsc":["$","$1","c",{"children":[["$","main",null,{"className":"page","children":["$","div",null,{"className":"container narrow","children":[["$","header",null,{"className":"header","children":[["$","p",null,{"className":"badge","children":"Medical notes"}],["$","h1",null,{"className":"title","children":"Sensitive emergency details"}],["$","p",null,{"className":"subtitle","children":"Medical notes are included in mock SMS templates only when the user has provided them."}]]}],["$","section",null,{"className":"card","children":["$","p",null,{"className":"sectionSub","children":"Production deployments should encrypt sensitive notes, enforce strict access controls, and support deletion/export workflows."}]}]]}]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"loading":null,"isPartial":false}
+4:null
