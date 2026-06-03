@@ -1,5 +1,4 @@
 const { env } = require("../config/env");
-const { insert } = require("./dataStore");
 
 function buildAlertMessage({ user, episode, location }) {
   const mapLink =
@@ -16,17 +15,14 @@ async function sendEmergencySms({ user, contacts, episode, location }) {
       : "mock";
   const message = buildAlertMessage({ user, episode, location });
 
-  const deliveries = contacts.map((contact) => {
-    const action = insert("emergencyActions", {
-      userId: user.id,
-      episodeId: episode?.id,
-      actionType: "sms",
-      status: provider === "mock" ? "mock-sent" : "queued",
-      details: { provider, to: contact.phone, contactName: contact.name, message },
-      timestamp: new Date().toISOString(),
-    });
-    return { contactId: contact.id, to: contact.phone, provider, status: action.status, message };
-  });
+  const deliveries = contacts.map((contact) => ({
+    contactId: String(contact.id || contact._id),
+    to: contact.phone,
+    provider,
+    status: provider === "mock" ? "mock-sent" : "queued",
+    message,
+    contactName: contact.name,
+  }));
 
   return { provider, message, deliveries };
 }

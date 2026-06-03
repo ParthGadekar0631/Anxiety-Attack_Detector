@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const EmergencyContactSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
     name: { type: String, required: true },
     relationship: String,
     phone: { type: String, required: true },
@@ -12,6 +12,8 @@ const EmergencyContactSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+EmergencyContactSchema.index({ userId: 1, priority: 1 });
 
 module.exports =
   mongoose.models.EmergencyContact || mongoose.model("EmergencyContact", EmergencyContactSchema);

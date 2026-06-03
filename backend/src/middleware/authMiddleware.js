@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const { env } = require("../config/env");
-const { store } = require("../services/dataStore");
+const User = require("../models/User");
 
-function authMiddleware(req, res, next) {
+async function authMiddleware(req, res, next) {
   const header = req.headers.authorization || "";
   const token = header.startsWith("Bearer ") ? header.slice(7) : "";
   if (!token) {
@@ -11,7 +11,7 @@ function authMiddleware(req, res, next) {
 
   try {
     const payload = jwt.verify(token, env.jwtSecret);
-    const user = store.users.find((entry) => entry.id === payload.sub);
+    const user = await User.findById(payload.sub);
     if (!user) {
       return res.status(401).json({ success: false, message: "User no longer exists", details: {} });
     }

@@ -3,18 +3,15 @@ const { env } = require("./env");
 
 async function connectDb() {
   if (!env.mongoUri) {
-    return { connected: false, reason: "MONGO_URI not configured; using in-memory store" };
+    throw new Error("MONGO_URI is required. The API no longer supports an in-memory persistence fallback.");
   }
 
-  try {
-    await mongoose.connect(env.mongoUri, { serverSelectionTimeoutMS: 2500 });
-    return { connected: true, reason: "MongoDB connected" };
-  } catch (error) {
-    return {
-      connected: false,
-      reason: `MongoDB unavailable; using in-memory store (${error.message})`,
-    };
-  }
+  await mongoose.connect(env.mongoUri, { serverSelectionTimeoutMS: 5000 });
+  return { connected: true, reason: "MongoDB connected" };
 }
 
-module.exports = { connectDb };
+async function disconnectDb() {
+  await mongoose.disconnect();
+}
+
+module.exports = { connectDb, disconnectDb };

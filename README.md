@@ -35,7 +35,7 @@ The original proposal direction changed from a Flutter/Firebase-style mobile con
 | --- | --- |
 | Frontend | Next.js, React, TypeScript, CSS modules/global CSS |
 | Backend | Node.js, Express, JWT, bcrypt, Zod-ready validation, Helmet, rate limiting |
-| Database | MongoDB with Mongoose models; in-memory fallback for local demo without Mongo |
+| Database | MongoDB with Mongoose schemas for users, auth events, episodes, medications, contacts, wearables, voice samples, and emergency logs |
 | ML Engine | Python, FastAPI, NumPy/Pandas/Scikit-learn-ready deterministic models |
 | AI | Mock AI provider; adapter-ready OpenAI/Gemini configuration |
 | Auth | JWT password auth, mock Google auth adapter, optional 2FA code challenge |
@@ -52,7 +52,7 @@ flowchart TD
   Client[Next.js frontend]
   API[Node.js/Express API]
   ML[Python FastAPI ML engine]
-  DB[(MongoDB or in-memory fallback)]
+  DB[(MongoDB)]
   AI[Mock AI calming provider]
   SMS[Mock/Twilio SMS provider]
   Insights[Personalized insights + relapse risk]
@@ -70,6 +70,7 @@ flowchart TD
 ## Documentation And Diagrams
 
 - [Architecture notes](docs/architecture.md)
+- [Database architecture](docs/database_architecture.md)
 - [Emergency flow](docs/emergency_flow.md)
 - [AI model methodology](docs/ai_model_methodology.md)
 - [Wearable integration](docs/wearable_integration.md)
@@ -92,7 +93,7 @@ flowchart TD
 | Episode logging, JWT auth, protected routes, risk scoring API | Implemented locally |
 | Google login/signup | Implemented with mock Google profile flow; real Google Identity credentials still require production wiring |
 | Optional 2FA | Implemented as a mock-email code challenge, configurable from Settings |
-| MongoDB models | Implemented; app also runs with in-memory fallback |
+| MongoDB models | Implemented as the required persistence layer |
 | Python ML engine | Implemented with deterministic/synthetic scoring |
 | Mock AI calming provider | Implemented and used when no OpenAI/Gemini key exists |
 | Mock SMS provider | Implemented and used when Twilio is not configured |
@@ -127,7 +128,7 @@ Prerequisites:
 
 - Node.js 22+
 - Python 3.11+
-- MongoDB optional for local development
+- MongoDB required for local development
 
 ```bash
 Copy-Item .env.example .env -Force
@@ -201,6 +202,11 @@ Base URL: `http://localhost:5000/api`
 | PATCH | `/settings/security` | Update 2FA and module settings |
 | POST | `/contacts` | Create emergency contact |
 | GET | `/contacts` | List emergency contacts |
+| GET | `/medications` | List medication records |
+| POST | `/medications` | Create medication record |
+| PATCH | `/medications/:medicationId` | Update medication record |
+| GET | `/medications/logs` | List medication adherence logs |
+| POST | `/medications/:medicationId/logs` | Create medication adherence log |
 | POST | `/predict` | Generate risk score without creating an episode |
 | POST | `/episodes` | Create episode, prediction, and AI response |
 | GET | `/episodes` | List user episodes |
@@ -319,6 +325,6 @@ The original planned wearable, voice, personalized adaptation, and relapse-risk 
 - Real email, authenticator app, or SMS delivery for production 2FA codes.
 - Real Twilio credentials and verified sender number for SMS.
 - Real Apple Health, Fitbit, and Samsung Health developer integrations, OAuth consent, and data permissions.
-- Production MongoDB Atlas database and backups.
+- Production MongoDB Atlas sizing, backups, retention policies, and secret rotation.
 - Production secret management, HTTPS, monitoring, and audit logging.
 - Legal, privacy, and clinical review before any real health deployment.

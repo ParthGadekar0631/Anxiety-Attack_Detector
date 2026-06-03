@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const PredictionSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true, index: true },
-    episodeId: String,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    episodeId: { type: mongoose.Schema.Types.ObjectId, ref: "Episode" },
     modelVersion: String,
     inputFeatures: Object,
     riskScore: Number,
@@ -14,5 +14,7 @@ const PredictionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+PredictionSchema.index({ userId: 1, createdAt: -1 });
 
 module.exports = mongoose.models.Prediction || mongoose.model("Prediction", PredictionSchema);

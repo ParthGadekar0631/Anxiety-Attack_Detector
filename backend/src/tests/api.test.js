@@ -1,7 +1,38 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { createApp } = require("../app");
-const { resetStore } = require("../services/dataStore");
+const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+
+let mongoServer;
+let createApp;
+let connectDb;
+let disconnectDb;
+
+async function clearDatabase() {
+  const collections = mongoose.connection.collections;
+  await Promise.all(Object.values(collections).map((collection) => collection.deleteMany({})));
+}
+
+test.before(async () => {
+  process.env.NODE_ENV = "test";
+  process.env.JWT_SECRET = "test-secret";
+  mongoServer = await MongoMemoryServer.create();
+  process.env.MONGO_URI = mongoServer.getUri("anxiety_attack_detector_test");
+
+  ({ connectDb, disconnectDb } = require("../config/db"));
+  ({ createApp } = require("../app"));
+
+  await connectDb();
+});
+
+test.after(async () => {
+  await disconnectDb();
+  await mongoServer.stop();
+});
+
+test.beforeEach(async () => {
+  await clearDatabase();
+});
 
 async function withServer(fn) {
   const app = createApp();
@@ -38,7 +69,6 @@ async function register(baseUrl) {
 }
 
 test("auth register/login and protected route", async () => {
-  resetStore();
   await withServer(async (baseUrl) => {
     const token = await register(baseUrl);
     assert.ok(token);
@@ -58,7 +88,6 @@ test("auth register/login and protected route", async () => {
 });
 
 test("google auth creates an account and returns a JWT", async () => {
-  resetStore();
   await withServer(async (baseUrl) => {
     const google = await jsonFetch(`${baseUrl}/auth/google`, {
       method: "POST",
@@ -79,7 +108,6 @@ test("google auth creates an account and returns a JWT", async () => {
 });
 
 test("2FA can be enabled from settings and verified during login", async () => {
-  resetStore();
   await withServer(async (baseUrl) => {
     const token = await register(baseUrl);
     const headers = { Authorization: `Bearer ${token}` };
@@ -111,8 +139,7 @@ test("2FA can be enabled from settings and verified during login", async () => {
   });
 });
 
-test("prediction route returns fallback-safe high risk output", async () => {
-  resetStore();
+test("prediction route returns high risk output and persists through mongoose", async () => {
   await withServer(async (baseUrl) => {
     const token = await register(baseUrl);
     const result = await jsonFetch(`${baseUrl}/predict`, {
@@ -134,8 +161,7 @@ test("prediction route returns fallback-safe high risk output", async () => {
   });
 });
 
-test("episode creation and emergency mock SMS flow", async () => {
-  resetStore();
+test("episode creation and emergency SMS flow are stored in MongoDB", async () => {
   await withServer(async (baseUrl) => {
     const token = await register(baseUrl);
     const headers = { Authorization: `Bearer ${token}` };
@@ -171,7 +197,7 @@ test("episode creation and emergency mock SMS flow", async () => {
       method: "POST",
       headers,
       body: JSON.stringify({
-        episodeId: episode.body.episode.id,
+        episodeId: episode.body.episode._id,
         location: { latitude: 40.7128, longitude: -74.006 },
       }),
     });
@@ -181,8 +207,7 @@ test("episode creation and emergency mock SMS flow", async () => {
   });
 });
 
-test("wearable, voice, personalized insight, and relapse endpoints", async () => {
-  resetStore();
+test("wearable, voice, personalized insight, relapse, and medication endpoints work together", async () => {
   await withServer(async (baseUrl) => {
     const token = await register(baseUrl);
     const headers = { Authorization: `Bearer ${token}` };
@@ -206,6 +231,29 @@ test("wearable, voice, personalized insight, and relapse endpoints", async () =>
     assert.equal(voice.body.triggerDetected, true);
     assert.ok(voice.body.sample.voiceStressScore >= 60);
 
+    const medication = await jsonFetch(`${baseUrl}/medications`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        name: "Sertraline",
+        dosage: "50mg",
+        frequency: "daily",
+        scheduleTimes: ["08:00"],
+      }),
+    });
+    assert.equal(medication.response.status, 201);
+
+    const medicationLog = await jsonFetch(`${baseUrl}/medications/${medication.body.medication._id}/logs`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        status: "taken",
+        scheduledFor: new Date().toISOString(),
+        takenAt: new Date().toISOString(),
+      }),
+    });
+    assert.equal(medicationLog.response.status, 201);
+
     const insights = await jsonFetch(`${baseUrl}/insights/personalized`, { headers });
     assert.equal(insights.response.status, 200);
     assert.ok(Array.isArray(insights.body.insights.recommendedPreventiveActions));
@@ -213,5 +261,10 @@ test("wearable, voice, personalized insight, and relapse endpoints", async () =>
     const relapse = await jsonFetch(`${baseUrl}/insights/relapse-risk`, { headers });
     assert.equal(relapse.response.status, 200);
     assert.equal(relapse.body.relapseRisk.window, "24-72 hours");
+
+    const history = await jsonFetch(`${baseUrl}/history`, { headers });
+    assert.equal(history.response.status, 200);
+    assert.equal(history.body.medications.length, 1);
+    assert.equal(history.body.medicationLogs.length, 1);
   });
 });
