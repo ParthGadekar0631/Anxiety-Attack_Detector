@@ -168,7 +168,7 @@ make docker-down
 
 ## GitHub Pages Demo
 
-The repository includes a GitHub Actions workflow that publishes a static frontend demo to GitHub Pages on every push to `main`.
+The repository includes a GitHub Actions workflow that publishes a static frontend demo to the `gh-pages` branch on every push to `main`.
 
 Hosted URL:
 
@@ -180,7 +180,7 @@ Local static export check:
 $env:GITHUB_PAGES="true"; $env:NEXT_PUBLIC_STATIC_DEMO="true"; npm run build:pages
 ```
 
-GitHub Pages serves only static files. The hosted demo uses the browser-side mock API for auth, episode scoring, wearable simulation, voice stress, relapse risk, and mock SMS flows. For the complete live system with Express, MongoDB, and the Python ML engine, use Docker locally or deploy the backend services to Render/Railway/AWS and set `NEXT_PUBLIC_API_URL` for the frontend.
+GitHub Pages serves only static files. The hosted demo uses the browser-side mock API for auth, episode scoring, wearable simulation, voice stress, relapse risk, and mock SMS flows. If the URL is still 404 after the workflow succeeds, set GitHub Pages source to `Deploy from a branch` and choose `gh-pages` / root in repository settings. For the complete live system with Express, MongoDB, and the Python ML engine, use Docker locally or deploy the backend services to Render/Railway/AWS and set `NEXT_PUBLIC_API_URL` for the frontend.
 
 ## API Endpoints
 
@@ -273,7 +273,7 @@ Add screenshots after running the app locally:
 
 ## Deployment Notes
 
-- GitHub Pages frontend demo: `.github/workflows/pages.yml` builds `frontend/out` with `GITHUB_PAGES=true` and `NEXT_PUBLIC_STATIC_DEMO=true`. This is a static demo, not a backend host.
+- GitHub Pages frontend demo: `.github/workflows/pages.yml` builds `frontend/out` with `GITHUB_PAGES=true` and `NEXT_PUBLIC_STATIC_DEMO=true`, then publishes it to the `gh-pages` branch. This is a static demo, not a backend host.
 - Vercel frontend: deploy `frontend/`, set `NEXT_PUBLIC_API_URL` to the deployed backend URL and `NEXT_PUBLIC_ML_API_URL` if exposing ML directly.
 - Render/Railway backend: deploy the root repo, start with `node backend/src/server.js`, configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `ML_ENGINE_URL`, and provider secrets.
 - Render/Railway ML engine: start with `uvicorn app.main:app --app-dir ml-engine --host 0.0.0.0 --port $PORT`.
