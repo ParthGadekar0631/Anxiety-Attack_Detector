@@ -624,3 +624,306 @@ html[data-theme="light"] .heroMediaFooter {
   font-size: 13px;
   margin-top: 2px;
 }
+
+/* ===== App surfaces ===== */
+.page {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(120, 170, 255, 0.09), transparent 260px),
+    var(--bg);
+  color: var(--text);
+  padding: 34px 16px 72px;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.container.narrow {
+  max-width: 780px;
+}
+
+.header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.title {
+  font-size: 34px;
+  line-height: 1.08;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--muted);
+  max-width: 74ch;
+  line-height: 1.55;
+}
+
+.card {
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 12px 30px var(--shadow);
+}
+
+.cardHeader,
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.metricCard {
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 14px;
+  min-height: 108px;
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+}
+
+.metricLabel,
+.metricMeta {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.metricValue {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.metricValue.small {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.twoCol {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+@media (min-width: 900px) {
+  .twoCol {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chart {
+  width: 100%;
+  min-height: 160px;
+  color: rgba(120, 255, 215, 0.95);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  margin-top: 14px;
+  padding: 10px;
+}
+
+.chart.alt {
+  color: rgba(120, 170, 255, 0.95);
+}
+
+.chartLabels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.barList {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 130px 1fr 30px;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.barTrack {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  overflow: hidden;
+}
+
+.barTrack span {
+  display: block;
+  height: 100%;
+  background: rgba(120, 255, 215, 0.75);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+textarea.input,
+.input.tall {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.checkField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  min-height: 44px;
+}
+
+.statusText {
+  color: var(--muted);
+  margin: 12px 0;
+  min-height: 22px;
+}
+
+.resultCard {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.segment {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+.segment.active {
+  background: var(--primary);
+  color: var(--primaryText);
+  border-color: var(--primaryBorder);
+}
+
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.badge.danger {
+  border-color: rgba(255, 120, 120, 0.45);
+  color: #ffb6b6;
+}
+
+.flowList {
+  display: grid;
+  gap: 10px;
+  color: var(--muted);
+  margin: 0 0 16px 20px;
+}
+
+.breathingStage {
+  display: grid;
+  place-items: center;
+  gap: 20px;
+  min-height: 420px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.breathingCircle {
+  width: min(52vw, 260px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 2px solid rgba(120, 255, 215, 0.65);
+  background: rgba(120, 170, 255, 0.16);
+  animation: breathe 12s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(0.76); opacity: 0.75; }
+  35% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1); opacity: 1; }
+  85% { transform: scale(0.76); opacity: 0.75; }
+}
+
+.dashboardPreview {
+  position: relative;
+}
+
+.previewChart {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  width: calc(100% - 48px);
+  height: 120px;
+  color: rgba(120, 255, 215, 0.85);
+  background: rgba(7, 11, 18, 0.58);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 28px;
+  }
+
+  .barRow {
+    grid-template-columns: 1fr;
+  }
+
+  .segmented {
+    grid-template-columns: 1fr;
+  }
+
+  .previewChart {
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+  }
+}

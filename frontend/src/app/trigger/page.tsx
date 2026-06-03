@@ -13,52 +13,44 @@ export default function TriggerPage() {
   const quickModes = useMemo(
     () =>
       [
-        { key: "talk" as const, label: "Talk to AI", desc: "Start calming guidance" },
+        { key: "talk" as const, label: "Talk to AI", desc: "Start mock calming guidance" },
         { key: "breathing" as const, label: "Breathing", desc: "Guided breathing steps" },
         { key: "grounding" as const, label: "Grounding", desc: "5-4-3-2-1 technique" },
       ] as const,
     []
   );
 
-  async function handleStart() {
-    try {
-      setIsStarting(true);
-
-      // For now: navigate to /calm. Later we’ll:
-      // 1) create a session in Zustand
-      // 2) call API: POST /trigger/start
-      router.push(`/calm?mode=${mode}`);
-    } finally {
-      setIsStarting(false);
-    }
+  function handleStart() {
+    setIsStarting(true);
+    router.push(mode === "breathing" ? "/breathing" : mode === "grounding" ? "/grounding" : "/calm");
   }
 
   return (
     <main className="page">
       <div className="container">
         <header className="header">
-          <h1 className="title">Trigger</h1>
+          <p className="badge">Manual trigger</p>
+          <h1 className="title">Start support flow</h1>
           <p className="subtitle">
-            If you feel an anxiety attack coming on, start here. You can begin calming steps immediately.
+            Start calming guidance immediately, then escalate to contacts or emergency services only if needed.
           </p>
         </header>
 
         <section className="card">
-          <h2 className="sectionTitle">How do you want to start?</h2>
-
+          <h2 className="sectionTitle">Choose a starting module</h2>
           <div className="grid">
-            {quickModes.map((m) => (
+            {quickModes.map((item) => (
               <button
-                key={m.key}
-                className={`option ${mode === m.key ? "optionActive" : ""}`}
-                onClick={() => setMode(m.key)}
+                key={item.key}
+                className={`option ${mode === item.key ? "optionActive" : ""}`}
+                onClick={() => setMode(item.key)}
                 type="button"
               >
                 <div className="optionTop">
-                  <span className="optionLabel">{m.label}</span>
-                  {mode === m.key ? <span className="pill">Selected</span> : null}
+                  <span className="optionLabel">{item.label}</span>
+                  {mode === item.key ? <span className="pill">Selected</span> : null}
                 </div>
-                <span className="optionDesc">{m.desc}</span>
+                <span className="optionDesc">{item.desc}</span>
               </button>
             ))}
           </div>
@@ -67,36 +59,20 @@ export default function TriggerPage() {
 
           <div className="row">
             <button className="primaryBtn" onClick={handleStart} disabled={isStarting} type="button">
-              {isStarting ? "Starting…" : "I need help"}
+              {isStarting ? "Starting..." : "I need help"}
             </button>
-
-            <button
-              className="secondaryBtn"
-              onClick={() => router.push("/emergency")}
-              type="button"
-              title="Go directly to emergency flow"
-            >
-              Emergency
+            <button className="secondaryBtn" onClick={() => router.push("/emergency")} type="button">
+              Emergency flow
             </button>
           </div>
-
-          <p className="finePrint">
-            Emergency is for escalation (contacts/call/911 prompt). The normal flow starts with calming steps.
-          </p>
         </section>
 
         <section className="card">
-          <h2 className="sectionTitle">Permissions (we’ll wire this soon)</h2>
+          <h2 className="sectionTitle">Optional permissions</h2>
           <ul className="list">
-            <li>
-              <span className="dot" /> Location: used to show your location in emergency screens
-            </li>
-            <li>
-              <span className="dot" /> Microphone: used for voice trigger / voice input (optional)
-            </li>
-            <li>
-              <span className="dot" /> Notifications: used for reminders / status updates (optional)
-            </li>
+            <li><span className="dot" /> Location can be attached to emergency notifications with consent.</li>
+            <li><span className="dot" /> Microphone can support browser speech-to-text trigger capture.</li>
+            <li><span className="dot" /> Notifications can support reminders and status updates.</li>
           </ul>
         </section>
       </div>

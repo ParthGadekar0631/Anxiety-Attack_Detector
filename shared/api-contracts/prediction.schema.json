@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PredictionRequest",
+  "type": "object",
+  "required": ["stressLevel", "heartRate", "sleepQuality"],
+  "properties": {
+    "stressLevel": { "type": "number", "minimum": 1, "maximum": 10 },
+    "heartRate": { "type": "number" },
+    "sleepQuality": { "type": "number", "minimum": 1, "maximum": 10 },
+    "breathingIrregularity": { "type": "boolean" },
+    "triggerEvent": { "type": "boolean" },
+    "triggerType": { "type": "string" },
+    "voiceStressScore": { "type": "number", "minimum": 0, "maximum": 100 }
+  }
+}

@@ -1,9 +1,23 @@
 {
-  "name": "anxiety-attack_detector",
+  "name": "anxiety-attack-detector",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "main": "backend/src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install:all": "npm install && npm --prefix frontend install",
+    "dev": "node scripts/dev.js",
+    "client": "npm --prefix frontend run dev",
+    "server": "node backend/src/server.js",
+    "server:dev": "nodemon backend/src/server.js",
+    "ml": "python -m uvicorn app.main:app --app-dir ml-engine --host 0.0.0.0 --port 8000",
+    "test": "npm run test:server",
+    "test:server": "node --test backend/src/tests/*.test.js",
+    "check:server": "node scripts/check-server.js",
+    "test:client": "npm --prefix frontend run lint",
+    "test:ml": "cd ml-engine && python -m pytest tests",
+    "lint": "npm --prefix frontend run lint",
+    "build": "npm --prefix frontend run build",
+    "clean": "node scripts/clean.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +30,7 @@
     "url": "https://github.com/ParthGadekar0631/Anxiety-Attack_Detector/issues"
   },
   "homepage": "https://github.com/ParthGadekar0631/Anxiety-Attack_Detector#readme",
-  "description": "",
+  "description": "AI-assisted anxiety escalation detection and intervention platform with mock AI/SMS, wearable simulation, voice trigger, and relapse risk.",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",

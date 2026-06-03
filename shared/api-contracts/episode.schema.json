@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Episode",
+  "type": "object",
+  "properties": {
+    "stressLevel": { "type": "number" },
+    "heartRate": { "type": "number" },
+    "sleepQuality": { "type": "number" },
+    "riskScore": { "type": "number" },
+    "riskCategory": { "type": "string" }
+  }
+}

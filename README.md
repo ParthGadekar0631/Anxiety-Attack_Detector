@@ -1,295 +1,295 @@
-<!-- ===================================================== -->
-<!-- BADGES -->
-<!-- ===================================================== -->
+# Anxiety Attack Detector
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Active%20Development-orange" />
-  <img src="https://img.shields.io/badge/AI-ML%20Model-purple" />
-  <img src="https://img.shields.io/badge/Backend-Node.js-brightgreen" />
-  <img src="https://img.shields.io/badge/Database-MongoDB-green" />
-  <img src="https://img.shields.io/badge/Frontend-React-blue" />
-  <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
-</p>
+Anxiety Attack Detector is an AI-assisted full-stack support platform for detecting early anxiety escalation signals, guiding calming interventions, logging episodes, and notifying trusted contacts when risk is high.
 
-<h1 align="center">🧠 Anxiety Attack Detector</h1>
+This version implements the original roadmap features as active modules using mock or simulated adapters where real paid APIs and device integrations are unavailable.
 
-<p align="center">
-  An intelligent early-warning system that detects anxiety attack patterns using behavioral, physiological, and contextual signals.
-</p>
+> Safety: This project is not a medical device, does not diagnose anxiety or panic disorder, and is not a substitute for professional care. For immediate danger, call local emergency services.
 
-<p align="center">
-  🚀 AI-powered • 📊 Real-time monitoring • 🛡️ Preventive intervention
-</p>
+## Problem
 
----
+Anxiety and panic episodes can escalate quickly. Many tools only react after distress is already high. This project combines self-reported symptoms, physiological-style inputs, contextual signals, voice trigger detection, wearable-style readings, and user history to estimate risk earlier and start structured intervention.
 
-# 🌍 Vision
+The original proposal direction changed from a Flutter/Firebase-style mobile concept to a deployable web monorepo with Next.js, Express, MongoDB, and a Python ML service.
 
-Anxiety attacks often escalate rapidly, leaving individuals with little time to react.  
-This project aims to **predict early signs of anxiety escalation** and provide timely intervention support.
+## Key Features
 
-The long-term goal is to build a **preventive AI companion** — not just a tracker, but a proactive mental health assistant.
+- Manual anxiety episode logging with stress, heart rate, sleep, breathing, trigger, caffeine, mood, chest tightness, dizziness, notes, and optional location.
+- Risk score, confidence score, escalation probability, category, explanation, and intervention recommendation.
+- Python ML engine with prediction, wearable-risk, voice-stress, relapse-risk, and training endpoints.
+- Mock AI calming provider that returns supportive breathing and grounding guidance without an API key.
+- Emergency flow with location payloads, contact alerts, primary contact call prompt, and emergency services prompt.
+- Mock SMS provider when Twilio is not configured.
+- Simulated Apple Watch, Fitbit, and Samsung Health wearable adapters.
+- Voice trigger phrase detection and simulated voice stress feature extraction.
+- Personalized adaptation from episode history, trigger patterns, wearable anomalies, and baseline comparisons.
+- Relapse/repeat-episode risk model for a 24-72 hour window.
+- JWT authentication, bcrypt password hashing, protected API routes, rate limiting, CORS, and Helmet headers.
+- Docker Compose setup for frontend, backend, ML engine, and MongoDB.
 
----
+## Tech Stack
 
-# ⚠️ Problem Statement
+| Layer | Technology |
+| --- | --- |
+| Frontend | Next.js, React, TypeScript, CSS modules/global CSS |
+| Backend | Node.js, Express, JWT, bcrypt, Zod-ready validation, Helmet, rate limiting |
+| Database | MongoDB with Mongoose models; in-memory fallback for local demo without Mongo |
+| ML Engine | Python, FastAPI, NumPy/Pandas/Scikit-learn-ready deterministic models |
+| AI | Mock AI provider; adapter-ready OpenAI/Gemini configuration |
+| Notifications | Mock SMS provider; Twilio-ready environment variables |
+| Wearables | Simulated Apple Watch, Fitbit, Samsung Health adapters |
+| Voice | Browser-compatible transcript flow, trigger phrase matching, simulated acoustic scoring |
+| DevOps | Docker, Docker Compose, Makefile, GitHub Actions |
 
-Millions of individuals experience anxiety attacks triggered by:
+## Architecture
 
-- Elevated heart rate  
-- Irregular breathing  
-- Stress patterns  
-- Environmental triggers  
-- Behavioral shifts  
+```mermaid
+flowchart TD
+  User[User input, voice trigger, wearable simulation]
+  Client[Next.js frontend]
+  API[Node.js/Express API]
+  ML[Python FastAPI ML engine]
+  DB[(MongoDB or in-memory fallback)]
+  AI[Mock AI calming provider]
+  SMS[Mock/Twilio SMS provider]
+  Insights[Personalized insights + relapse risk]
 
-Most tools are reactive.  
-This system is designed to be **predictive**.
-
----
-
-# 🏗️ System Architecture
-
-```
-User Input / Sensor Data
-        │
-        ▼
-Preprocessing Layer
-        │
-        ▼
-ML Prediction Engine
-        │
-        ▼
-Risk Score Generator
-        │
-        ▼
-Intervention Module
-(Alerts • Breathing Guidance • Logging)
+  User --> Client --> API
+  API --> ML
+  API --> DB
+  API --> AI
+  API --> SMS
+  API --> Insights
+  ML --> API
+  Insights --> Client
 ```
 
-Architecture follows a modular AI pipeline for scalability and future wearable integration.
+## Documentation And Diagrams
 
----
+- [Architecture notes](docs/architecture.md)
+- [Emergency flow](docs/emergency_flow.md)
+- [AI model methodology](docs/ai_model_methodology.md)
+- [Wearable integration](docs/wearable_integration.md)
+- [Voice detection](docs/voice_detection.md)
+- [Privacy and HIPAA notes](docs/privacy_and_hipaa_notes.md)
+- [Deployment guide](docs/deployment_guide.md)
+- [Testing guide](docs/testing_guide.md)
+- [Limitations and disclaimer](docs/limitations_and_disclaimer.md)
+- [Resume bullets](docs/resume_bullets.md)
+- [System architecture diagram](diagrams/system_architecture.md)
+- [Emergency sequence flow](diagrams/emergency_sequence_flow.md)
+- [ML pipeline flow](diagrams/ml_pipeline_flow.md)
+- [Wearable data flow](diagrams/wearable_data_flow.md)
+- [Deployment flow](diagrams/deployment_flow.md)
 
-# 🧠 Core Features
+## Real vs Simulated
 
-## 📊 Real-Time Risk Scoring
-- Calculates anxiety risk probability
-- Generates dynamic confidence score
-- Detects early warning signals
+| Module | Status |
+| --- | --- |
+| Episode logging, JWT auth, protected routes, risk scoring API | Implemented locally |
+| MongoDB models | Implemented; app also runs with in-memory fallback |
+| Python ML engine | Implemented with deterministic/synthetic scoring |
+| Mock AI calming provider | Implemented and used when no OpenAI/Gemini key exists |
+| Mock SMS provider | Implemented and used when Twilio is not configured |
+| Twilio SMS adapter | Environment-ready; production credentials required |
+| Apple Watch/Fitbit/Samsung adapters | Simulated adapters implemented |
+| Voice trigger | Implemented via transcript phrase matching |
+| Voice stress extraction | Simulated acoustic feature scoring |
+| Personalized adaptation | Implemented from logged history |
+| Relapse-risk model | Implemented deterministic 24-72 hour model |
 
----
+## Folder Structure
 
-## 🤖 Machine Learning Engine
-- Supervised classification model
-- Feature-based prediction
-- Supports model retraining
-- Designed for future LSTM/Time-series upgrade
-
----
-
-## 📈 Behavioral Pattern Tracking
-- Logs stress inputs
-- Tracks triggers
-- Identifies recurring escalation cycles
-
----
-
-## 🚨 Smart Intervention System
-When elevated risk is detected:
-- Sends alert notification
-- Activates guided breathing module
-- Suggests grounding exercises
-- Logs the episode for analytics
-
----
-
-## 📂 Historical Insights Dashboard
-- View anxiety trends over time
-- Identify triggers
-- Track frequency & severity
-
----
-
-# 🛠️ Technology Stack
-
-| Layer | Technologies |
-|--------|-------------|
-| **Frontend** | React / Next.js |
-| **Backend** | Node.js, Express |
-| **Database** | MongoDB |
-| **AI / ML** | Python (Scikit-learn / TensorFlow - Planned Upgrade) |
-| **Data Processing** | NumPy, Pandas |
-| **Authentication** | JWT |
-| **Deployment (Planned)** | Docker, AWS |
-
----
-
-# 🧪 ML Model Overview
-
-### Input Features (Current Prototype)
-- Self-reported stress level
-- Heart rate (manual input / wearable-ready)
-- Sleep quality
-- Breathing irregularity indicator
-- Trigger event flag
-
-### Output
-- Anxiety risk score (0–100%)
-- Confidence level
-- Escalation probability
-
-### Model Type
-- Logistic Regression (Initial Prototype)
-- Random Forest (Testing Phase)
-- LSTM (Future Roadmap)
-
----
-
-# 📂 Project Structure
-
-```
-Anxiety-Attack-Detector/
-│
-├── client/                     # Frontend UI
-│   ├── components/
-│   ├── pages/
-│   └── dashboard/
-│
-├── server/                     # Backend API
-│   ├── controllers/
-│   ├── routes/
-│   ├── models/
-│   └── middleware/
-│
-├── ml-engine/                  # AI prediction module
-│   ├── model.py
-│   ├── train.py
-│   ├── dataset/
-│   └── utils/
-│
-├── .env
-├── package.json
-└── README.md
+```text
+.
+|-- backend/              # Express API, services, models, tests
+|-- frontend/             # Next.js app routes and UI
+|-- ml-engine/            # FastAPI ML engine and tests
+|-- docs/                 # Architecture, privacy, deployment, testing notes
+|-- diagrams/             # Mermaid architecture and flow diagrams
+|-- shared/               # API contracts and data dictionary
+|-- scripts/              # Local dev and cleanup helpers
+|-- docker-compose.yml
+|-- Makefile
+|-- .env.example
+`-- README.md
 ```
 
-Structure will evolve as model complexity increases.
+## Local Setup
 
----
+Prerequisites:
 
-# ⚙️ Installation Guide
-
-## 🔧 Prerequisites
-- Node.js v16+
-- Python 3.9+
-- MongoDB Atlas
-
----
-
-## 🚀 Backend Setup
+- Node.js 22+
+- Python 3.11+
+- MongoDB optional for local development
 
 ```bash
-git clone https://github.com/yourusername/anxiety-attack-detector.git
-cd server
-npm install
-npm start
-```
-
-Create `.env` file:
-
-```
-PORT=5000
-MONGO_URI=your_mongodb_connection
-JWT_SECRET=your_secret_key
-```
-
----
-
-## 🧠 ML Engine Setup
-
-```bash
-cd ml-engine
-pip install -r requirements.txt
-python train.py
-```
-
----
-
-## 💻 Frontend Setup
-
-```bash
-cd client
-npm install
+Copy-Item .env.example .env -Force
+npm run install:all
+python -m pip install -r ml-engine/requirements.txt
 npm run dev
 ```
 
----
+Local URLs:
 
-# 📡 API Endpoints
+- Frontend: http://localhost:3000
+- Backend health: http://localhost:5000/api/health
+- ML health: http://localhost:8000/health
+- MongoDB: localhost:27017
 
-| Endpoint | Method | Description |
-|----------|--------|------------|
-| `/api/auth/register` | POST | Register user |
-| `/api/auth/login` | POST | Login user |
-| `/api/predict` | POST | Get anxiety risk score |
-| `/api/history` | GET | Fetch historical data |
-| `/api/log` | POST | Log anxiety event |
+Individual services:
 
----
+```bash
+npm run client
+npm run server
+npm run ml
+```
 
-# 📊 Current Development Status
+## Docker Setup
 
-### ✅ Phase 1 – Foundation
-- Backend structure setup
-- MongoDB integration
-- Basic prediction endpoint
-- Risk scoring logic
+```bash
+docker-compose up --build
+```
 
-### 🔄 Phase 2 – ML Enhancement (In Progress)
-- Feature normalization
-- Model accuracy tuning
-- Dataset refinement
+Stop containers:
 
-### ⏳ Phase 3 – Smart Intervention System
-- Automated intervention triggers
-- Real-time notifications
-- Guided breathing UI
+```bash
+docker-compose down
+```
 
----
+Optional Makefile aliases, if `make` is installed:
 
-# 🔮 Future Roadmap
+```bash
+make docker-up
+make docker-down
+```
 
-- 📱 Wearable device integration (Apple Watch / Fitbit)
-- 🧠 Advanced time-series modeling
-- 🎙 Voice pattern stress detection
-- 📊 Personalized AI adaptation
-- 🛡️ HIPAA-compliant cloud architecture
-- 📈 Predictive relapse modeling
+## API Endpoints
 
----
+Base URL: `http://localhost:5000/api`
 
-# ⚠️ Disclaimer
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/health` | Backend status and mock provider status |
+| POST | `/auth/register` | Register user and return JWT |
+| POST | `/auth/login` | Login and return JWT |
+| GET | `/me` | Current authenticated user |
+| POST | `/contacts` | Create emergency contact |
+| GET | `/contacts` | List emergency contacts |
+| POST | `/predict` | Generate risk score without creating an episode |
+| POST | `/episodes` | Create episode, prediction, and AI response |
+| GET | `/episodes` | List user episodes |
+| GET | `/history` | Episode, prediction, wearable, voice, and emergency history |
+| POST | `/calm` | Generate calming guidance |
+| POST | `/emergency/start` | Log emergency flow start |
+| POST | `/emergency/notify` | Send mock/Twilio SMS to contacts |
+| POST | `/wearables/simulate` | Generate simulated Apple/Fitbit/Samsung reading |
+| POST | `/wearables/analyze` | Analyze wearable reading |
+| POST | `/voice/analyze` | Detect trigger phrase and score simulated voice stress |
+| GET | `/insights/personalized` | Personalized trigger and prevention insights |
+| GET | `/insights/relapse-risk` | 24-72 hour relapse/repeat-risk estimate |
 
-This system is not a medical diagnostic tool.  
-It is a predictive support system designed to assist users in monitoring anxiety patterns.
+ML engine base URL: `http://localhost:8000`
 
-For medical emergencies, consult a licensed healthcare professional.
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/health` | ML service status |
+| POST | `/predict` | Risk prediction |
+| POST | `/train` | Generate synthetic datasets / training response |
+| POST | `/predict-relapse` | Relapse risk prediction |
+| POST | `/voice-stress` | Simulated voice stress scoring |
+| POST | `/wearable-risk` | Wearable anomaly/risk scoring |
 
----
+Example prediction request:
 
-# 👨‍💻 Developer
+```json
+{
+  "stressLevel": 8,
+  "heartRate": 118,
+  "sleepQuality": 3,
+  "breathingIrregularity": true,
+  "triggerEvent": true,
+  "triggerType": "crowded place",
+  "caffeineIntake": 2,
+  "chestTightness": 7,
+  "dizziness": 5,
+  "mood": "anxious"
+}
+```
 
-**Parth Gadekar**  
-MS Computer Science  
-AI & Full-Stack Developer  
+## Testing Commands
 
----
+```bash
+npm run test:server
+npm run check:server
+npm run test:client
+npm run test:ml
+npm run lint
+npm run build
+npm run clean
+```
 
-# 📄 License
+Optional Makefile aliases, if `make` is installed:
 
-MIT License – Free to use, modify, and distribute.
+```bash
+make test
+make test-server
+make test-client
+make test-ml
+make lint
+make build
+make clean
+```
 
----
+## Screenshots / Placeholders
 
-<p align="center">
-  Building preventive mental health technology with AI.
-</p>
+Add screenshots after running the app locally:
+
+- `docs/screenshots/landing.png` - landing page and module overview
+- `docs/screenshots/dashboard.png` - risk and trigger trends
+- `docs/screenshots/episode.png` - episode form and prediction result
+- `docs/screenshots/wearables.png` - simulated wearable adapter output
+- `docs/screenshots/voice.png` - voice trigger analysis
+- `docs/screenshots/emergency.png` - mock SMS emergency flow
+
+## Deployment Notes
+
+- Vercel frontend: deploy `frontend/`, set `NEXT_PUBLIC_API_URL` to the deployed backend URL and `NEXT_PUBLIC_ML_API_URL` if exposing ML directly.
+- Render/Railway backend: deploy the root repo, start with `node backend/src/server.js`, configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `ML_ENGINE_URL`, and provider secrets.
+- Render/Railway ML engine: start with `uvicorn app.main:app --app-dir ml-engine --host 0.0.0.0 --port $PORT`.
+- MongoDB Atlas: create a cluster, allow the backend host, create a least-privilege database user, and set `MONGO_URI`.
+- Docker/AWS: use `docker-compose.yml` for local orchestration or build separate images for ECS/EC2. Use AWS Secrets Manager or SSM Parameter Store for secrets.
+
+## Privacy And Safety
+
+- This app is not a medical device.
+- It does not diagnose anxiety, panic disorder, or any health condition.
+- AI calming responses are supportive only.
+- Wearable and voice scores are estimates and may be inaccurate.
+- User anxiety logs, location, medical notes, and emergency contact details should be treated as sensitive data.
+- Production use requires HTTPS, strong secrets, database access controls, deletion/export workflows, logging review, and legal/privacy review.
+- HIPAA compliance is not claimed.
+
+## Resume-Ready Bullets
+
+Anxiety Attack Detector  
+Personal Project | Next.js, Node.js, MongoDB, Python, Scikit-learn, JWT, Docker
+
+- Built AI-assisted anxiety monitoring platform with manual, voice-triggered, and biometric-style risk detection workflows.
+- Developed ML risk scoring engine using behavioral, physiological, and contextual features to classify anxiety escalation risk.
+- Integrated emergency response flow with calming guidance, mock/Twilio SMS alerts, location display, and contact escalation prompts.
+- Created historical insights dashboard to track risk trends, recurring triggers, wearable anomalies, and relapse-risk indicators.
+- Designed modular wearable, voice-stress, and AI-calming adapters to support Apple Watch/Fitbit-style integrations and future clinical review.
+
+## Implemented Planned Modules
+
+The original planned wearable, voice, personalized adaptation, and relapse-risk modules are implemented in this version using simulated adapters and modular interfaces.
+
+## What Still Needs Production Setup
+
+- Real OpenAI or Gemini credentials for live AI calming responses.
+- Real Twilio credentials and verified sender number for SMS.
+- Real Apple Health, Fitbit, and Samsung Health developer integrations, OAuth consent, and data permissions.
+- Production MongoDB Atlas database and backups.
+- Production secret management, HTTPS, monitoring, and audit logging.
+- Legal, privacy, and clinical review before any real health deployment.

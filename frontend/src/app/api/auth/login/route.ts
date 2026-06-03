@@ -15,7 +15,8 @@ export async function POST(req: Request) {
     const token = `dev.${user.id}.${Date.now()}`;
 
     return NextResponse.json({ user, token }, { status: 200 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "Login failed" }, { status: 401 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Login failed";
+    return NextResponse.json({ error: message }, { status: 401 });
   }
 }

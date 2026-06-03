@@ -1,0 +1,51 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: aad-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  ml-engine:
+    build:
+      context: ./ml-engine
+    container_name: aad-ml-engine
+    ports:
+      - "8000:8000"
+
+  server:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: aad-server
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      NODE_ENV: development
+      MONGO_URI: mongodb://mongo:27017/anxiety_attack_detector
+      JWT_SECRET: ${JWT_SECRET}
+      CLIENT_URL: http://localhost:3000
+      ML_ENGINE_URL: http://ml-engine:8000
+      AI_PROVIDER: mock
+      SMS_PROVIDER: mock
+    depends_on:
+      - mongo
+      - ml-engine
+
+  client:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: aad-client
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+      NEXT_PUBLIC_ML_API_URL: http://localhost:8000
+    depends_on:
+      - server
+
+volumes:
+  mongo-data:

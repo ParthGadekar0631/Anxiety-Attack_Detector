@@ -1,69 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { AuthService } from "@/services/auth/auth.service";
+import { apiFetch, setToken } from "@/lib/apiClient";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("demo@anxiety-detector.local");
+  const [password, setPassword] = useState("demo12345");
+  const [status, setStatus] = useState("");
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  async function submit(event: FormEvent) {
+    event.preventDefault();
     try {
-      const res = await AuthService.login({ email, password });
-      localStorage.setItem("auth_token", res.token);
-      localStorage.setItem("auth_user", JSON.stringify(res.user));
-      router.push("/");
-    } catch (err: any) {
-      setError(err?.message ?? "Login failed");
-    } finally {
-      setLoading(false);
+      const body = await apiFetch<{ token: string }>("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
+      setToken(body.token);
+      setStatus("Logged in. You can now use protected API features.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Login failed.");
     }
   }
 
   return (
     <main className="page">
-      <div className="container">
-        <header className="header">
-          <h1 className="title">Welcome back</h1>
-          <p className="subtitle">Log in to access your saved settings.</p>
-        </header>
-
-        <section className="card">
-          <form onSubmit={onSubmit} className="form">
-            <label className="field">
-              <span className="label">Email</span>
-              <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </label>
-
-            <label className="field">
-              <span className="label">Password</span>
-              <input
-                className="input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </label>
-
-            {error ? <p className="error">{error}</p> : null}
-
-            <button className="primaryBtn" disabled={loading} type="submit">
-              {loading ? "Logging in…" : "Log in"}
-            </button>
-
-            <p className="finePrint">
-              New here? <Link href="/signup">Create an account</Link>
-            </p>
-          </form>
-        </section>
+      <div className="container narrow">
+        <header className="header"><h1 className="title">Log in</h1><p className="subtitle">Use the demo account after registering once, or create a new account.</p></header>
+        <form className="card form" onSubmit={submit}>
+          <label className="field">Email<input className="input" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+          <label className="field">Password<input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+          <button className="primaryBtn" type="submit">Log in</button>
+          <Link className="footerLink" href="/signup">Need an account?</Link>
+          <p className="statusText">{status}</p>
+        </form>
       </div>
     </main>
   );

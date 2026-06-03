@@ -17,11 +17,11 @@ export async function POST(req: Request) {
 
     const user = await createUser({ name, email, password });
 
-    // Dev token (placeholder). Later: JWT from Node backend.
     const token = `dev.${user.id}.${Date.now()}`;
 
     return NextResponse.json({ user, token }, { status: 201 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? "Signup failed" }, { status: 400 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Signup failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
