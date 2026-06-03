@@ -3,6 +3,7 @@ const path = require("node:path");
 
 const targets = [
   path.resolve("frontend/.next"),
+  path.resolve("frontend/out"),
   path.resolve("ml-engine/.pytest_cache"),
   path.resolve(".pytest_cache"),
 ];

@@ -26,6 +26,7 @@ The original proposal direction changed from a Flutter/Firebase-style mobile con
 - Relapse/repeat-episode risk model for a 24-72 hour window.
 - JWT authentication, bcrypt password hashing, protected API routes, rate limiting, CORS, and Helmet headers.
 - Docker Compose setup for frontend, backend, ML engine, and MongoDB.
+- GitHub Pages static frontend demo with browser-side mock API fallback.
 
 ## Tech Stack
 
@@ -39,7 +40,7 @@ The original proposal direction changed from a Flutter/Firebase-style mobile con
 | Notifications | Mock SMS provider; Twilio-ready environment variables |
 | Wearables | Simulated Apple Watch, Fitbit, Samsung Health adapters |
 | Voice | Browser-compatible transcript flow, trigger phrase matching, simulated acoustic scoring |
-| DevOps | Docker, Docker Compose, Makefile, GitHub Actions |
+| DevOps | Docker, Docker Compose, Makefile, GitHub Actions, GitHub Pages static export |
 
 ## Architecture
 
@@ -97,6 +98,7 @@ flowchart TD
 | Voice stress extraction | Simulated acoustic feature scoring |
 | Personalized adaptation | Implemented from logged history |
 | Relapse-risk model | Implemented deterministic 24-72 hour model |
+| GitHub Pages hosted demo | Static frontend implemented; browser mock API is used because Pages cannot run Express, MongoDB, or FastAPI |
 
 ## Folder Structure
 
@@ -164,6 +166,22 @@ make docker-up
 make docker-down
 ```
 
+## GitHub Pages Demo
+
+The repository includes a GitHub Actions workflow that publishes a static frontend demo to GitHub Pages on every push to `main`.
+
+Hosted URL:
+
+- `https://parthgadekar0631.github.io/Anxiety-Attack_Detector/`
+
+Local static export check:
+
+```bash
+$env:GITHUB_PAGES="true"; $env:NEXT_PUBLIC_STATIC_DEMO="true"; npm run build:pages
+```
+
+GitHub Pages serves only static files. The hosted demo uses the browser-side mock API for auth, episode scoring, wearable simulation, voice stress, relapse risk, and mock SMS flows. For the complete live system with Express, MongoDB, and the Python ML engine, use Docker locally or deploy the backend services to Render/Railway/AWS and set `NEXT_PUBLIC_API_URL` for the frontend.
+
 ## API Endpoints
 
 Base URL: `http://localhost:5000/api`
@@ -226,6 +244,7 @@ npm run test:client
 npm run test:ml
 npm run lint
 npm run build
+npm run build:pages
 npm run clean
 ```
 
@@ -254,6 +273,7 @@ Add screenshots after running the app locally:
 
 ## Deployment Notes
 
+- GitHub Pages frontend demo: `.github/workflows/pages.yml` builds `frontend/out` with `GITHUB_PAGES=true` and `NEXT_PUBLIC_STATIC_DEMO=true`. This is a static demo, not a backend host.
 - Vercel frontend: deploy `frontend/`, set `NEXT_PUBLIC_API_URL` to the deployed backend URL and `NEXT_PUBLIC_ML_API_URL` if exposing ML directly.
 - Render/Railway backend: deploy the root repo, start with `node backend/src/server.js`, configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `ML_ENGINE_URL`, and provider secrets.
 - Render/Railway ML engine: start with `uvicorn app.main:app --app-dir ml-engine --host 0.0.0.0 --port $PORT`.

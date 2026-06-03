@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { demoEpisodes, sparklinePoints } from "@/lib/demoData";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const assetPath = (path: string) => `${basePath}${path}`;
+
 export default function HomePage() {
   const points = sparklinePoints(demoEpisodes.map((episode) => episode.risk), 340, 110);
 
@@ -13,7 +16,7 @@ export default function HomePage() {
         <div className="siteHeaderInner">
           <Link href="/" className="brand">
             <span className="logoWrap">
-              <Image src="/icons/logo.png" alt="Anxiety Attack Detector logo" width={34} height={34} priority />
+              <Image src={assetPath("/icons/logo.png")} alt="Anxiety Attack Detector logo" width={34} height={34} priority />
             </span>
             <span className="brandText">Anxiety Attack Detector</span>
           </Link>
@@ -64,7 +67,7 @@ export default function HomePage() {
               </div>
 
               <div className="heroMedia dashboardPreview">
-                <Image src="/images/hero.png" alt="Calming visual" width={720} height={480} className="heroGif" priority />
+                <Image src={assetPath("/images/hero.png")} alt="Calming visual" width={720} height={480} className="heroGif" priority />
                 <svg viewBox="0 0 340 120" className="previewChart" aria-label="Risk trend preview">
                   <polyline points={points} fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -124,7 +127,7 @@ export default function HomePage() {
         <div className="footerInner">
           <div className="footerCol">
             <div className="footerBrand">
-              <span className="footerLogo"><Image src="/icons/logo.png" alt="Logo" width={24} height={24} /></span>
+              <span className="footerLogo"><Image src={assetPath("/icons/logo.png")} alt="Logo" width={24} height={24} /></span>
               <span>Anxiety Attack Detector</span>
             </div>
             <p className="footerText">

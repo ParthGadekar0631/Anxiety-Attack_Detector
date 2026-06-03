@@ -17,6 +17,7 @@
     "test:ml": "cd ml-engine && python -m pytest tests",
     "lint": "npm --prefix frontend run lint",
     "build": "npm --prefix frontend run build",
+    "build:pages": "npm --prefix frontend run build:pages",
     "clean": "node scripts/clean.js"
   },
   "repository": {
