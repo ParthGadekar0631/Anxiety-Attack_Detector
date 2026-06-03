@@ -1,4 +1,7 @@
-import bcrypt from "bcryptjs";
+import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
+
+const scrypt = promisify(scryptCallback);
 
 export type DevUser = {
   id: string;
@@ -14,11 +17,25 @@ const g = globalThis as unknown as { __DEV_USERS__?: Map<string, DevUser> };
 export const devUsers = g.__DEV_USERS__ ?? new Map<string, DevUser>();
 g.__DEV_USERS__ = devUsers;
 
+async function hashPassword(password: string) {
+  const salt = randomBytes(16).toString("hex");
+  const derivedKey = (await scrypt(password, salt, 64)) as Buffer;
+  return `${salt}:${derivedKey.toString("hex")}`;
+}
+
+async function verifyPassword(password: string, storedHash: string) {
+  const [salt, key] = storedHash.split(":");
+  if (!salt || !key) return false;
+  const derivedKey = (await scrypt(password, salt, 64)) as Buffer;
+  const storedKey = Buffer.from(key, "hex");
+  return storedKey.length === derivedKey.length && timingSafeEqual(storedKey, derivedKey);
+}
+
 export async function createUser(input: { name: string; email: string; password: string }) {
   const email = input.email.toLowerCase().trim();
   if (devUsers.has(email)) throw new Error("Email already in use");
 
-  const passwordHash = await bcrypt.hash(input.password, 10);
+  const passwordHash = await hashPassword(input.password);
   const user: DevUser = {
     id: crypto.randomUUID(),
     name: input.name.trim(),
@@ -36,7 +53,7 @@ export async function verifyUser(input: { email: string; password: string }) {
   const user = devUsers.get(email);
   if (!user) throw new Error("Invalid email or password");
 
-  const ok = await bcrypt.compare(input.password, user.passwordHash);
+  const ok = await verifyPassword(input.password, user.passwordHash);
   if (!ok) throw new Error("Invalid email or password");
 
   return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt };
