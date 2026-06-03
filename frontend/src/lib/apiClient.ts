@@ -50,11 +50,19 @@ type DemoUser = {
   name: string;
   email: string;
   password: string;
+  preferredCalmingStyle: string;
+  voiceTriggerEnabled: boolean;
+  wearableMonitoringEnabled: boolean;
+  smsAlertsEnabled: boolean;
+  twoFactorEnabled: boolean;
+  authProvider: string;
 };
 
 type DemoState = {
   token: string;
+  currentEmail: string;
   users: Record<string, DemoUser>;
+  twoFactorChallenges: Record<string, { email: string; code: string; consumed: boolean }>;
   contacts: Array<Record<string, unknown>>;
   episodes: EpisodePayload[];
 };
@@ -72,7 +80,9 @@ function shouldUseStaticDemo() {
 function getDemoState() {
   globalThis.__AAD_STATIC_DEMO_STATE__ ??= {
     token: "demo-static-token",
+    currentEmail: "",
     users: {},
+    twoFactorChallenges: {},
     contacts: [],
     episodes: [],
   };
@@ -111,6 +121,39 @@ function scoreEpisode(payload: Partial<EpisodePayload>) {
   };
 }
 
+function makeDemoUser(input: { email: string; name?: string; password?: string; authProvider?: string }) {
+  return {
+    id: `demo-${input.email}`,
+    name: input.name || "Demo User",
+    email: input.email,
+    password: input.password || "demo12345",
+    preferredCalmingStyle: "grounded",
+    voiceTriggerEnabled: true,
+    wearableMonitoringEnabled: true,
+    smsAlertsEnabled: true,
+    twoFactorEnabled: false,
+    authProvider: input.authProvider || "password",
+  };
+}
+
+function authDemoUser(state: DemoState, user: DemoUser) {
+  if (user.twoFactorEnabled) {
+    const challengeId = `challenge-${Date.now()}`;
+    const code = "123456";
+    state.twoFactorChallenges[challengeId] = { email: user.email, code, consumed: false };
+    return {
+      success: true,
+      requiresTwoFactor: true,
+      challengeId,
+      devCode: code,
+      delivery: { channel: "mock-email", destination: user.email, expiresInMinutes: 10 },
+    };
+  }
+  state.currentEmail = user.email;
+  state.token = `static.${user.id}.${Date.now()}`;
+  return { success: true, token: state.token, user };
+}
+
 async function mockApiFetch<T>(path: string, options: RequestInit): Promise<T> {
   const state = getDemoState();
   const body = parseBody(options);
@@ -121,16 +164,51 @@ async function mockApiFetch<T>(path: string, options: RequestInit): Promise<T> {
     return { status: "ok", mode: "static-demo" } as T;
   }
 
-  if (path === "/api/auth/register" || path === "/api/auth/login") {
+  if (path === "/api/auth/register") {
     const email = String(body.email ?? "demo@anxiety-detector.local").toLowerCase();
     state.users[email] ??= {
-      id: `demo-${Object.keys(state.users).length + 1}`,
-      name: String(body.name ?? "Demo User"),
-      email,
-      password: String(body.password ?? "demo12345"),
+      ...makeDemoUser({ email, name: String(body.name ?? "Demo User"), password: String(body.password ?? "demo12345") }),
     };
-    state.token = `static.${state.users[email].id}.${Date.now()}`;
-    return { token: state.token, user: state.users[email] } as T;
+    return authDemoUser(state, state.users[email]) as T;
+  }
+
+  if (path === "/api/auth/login") {
+    const email = String(body.email ?? "demo@anxiety-detector.local").toLowerCase();
+    state.users[email] ??= makeDemoUser({ email, password: String(body.password ?? "demo12345") });
+    return authDemoUser(state, state.users[email]) as T;
+  }
+
+  if (path === "/api/auth/google") {
+    const profile = (body.profile || {}) as Record<string, unknown>;
+    const email = String(profile.email ?? body.email ?? "google-demo@anxiety-detector.local").toLowerCase();
+    state.users[email] ??= makeDemoUser({ email, name: String(profile.name ?? "Google Demo User"), authProvider: "google" });
+    state.users[email].authProvider = state.users[email].authProvider === "password" ? "password+google" : state.users[email].authProvider;
+    return authDemoUser(state, state.users[email]) as T;
+  }
+
+  if (path === "/api/auth/2fa/verify") {
+    const challenge = state.twoFactorChallenges[String(body.challengeId ?? "")];
+    if (!challenge || challenge.consumed || String(body.code ?? "") !== challenge.code) {
+      throw new Error("Invalid two-factor code");
+    }
+    challenge.consumed = true;
+    const user = state.users[challenge.email];
+    state.currentEmail = user.email;
+    state.token = `static.${user.id}.${Date.now()}`;
+    return { success: true, token: state.token, user } as T;
+  }
+
+  if (path === "/api/me") {
+    const email = state.currentEmail || Object.keys(state.users)[0] || "demo@anxiety-detector.local";
+    state.users[email] ??= makeDemoUser({ email });
+    return { success: true, user: state.users[email] } as T;
+  }
+
+  if (path === "/api/settings/security") {
+    const email = state.currentEmail || Object.keys(state.users)[0] || "demo@anxiety-detector.local";
+    const user = state.users[email] ?? makeDemoUser({ email });
+    state.users[email] = { ...user, ...body };
+    return { success: true, user: state.users[email], twoFactor: { enabled: state.users[email].twoFactorEnabled, method: "mock-email-code" } } as T;
   }
 
   if (path === "/api/contacts") {

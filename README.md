@@ -20,6 +20,7 @@ The original proposal direction changed from a Flutter/Firebase-style mobile con
 - Mock AI calming provider that returns supportive breathing and grounding guidance without an API key.
 - Emergency flow with location payloads, contact alerts, primary contact call prompt, and emergency services prompt.
 - Mock SMS provider when Twilio is not configured.
+- Password auth, mock Google account login/signup, and optional mock-email 2FA.
 - Simulated Apple Watch, Fitbit, and Samsung Health wearable adapters.
 - Voice trigger phrase detection and simulated voice stress feature extraction.
 - Personalized adaptation from episode history, trigger patterns, wearable anomalies, and baseline comparisons.
@@ -37,6 +38,7 @@ The original proposal direction changed from a Flutter/Firebase-style mobile con
 | Database | MongoDB with Mongoose models; in-memory fallback for local demo without Mongo |
 | ML Engine | Python, FastAPI, NumPy/Pandas/Scikit-learn-ready deterministic models |
 | AI | Mock AI provider; adapter-ready OpenAI/Gemini configuration |
+| Auth | JWT password auth, mock Google auth adapter, optional 2FA code challenge |
 | Notifications | Mock SMS provider; Twilio-ready environment variables |
 | Wearables | Simulated Apple Watch, Fitbit, Samsung Health adapters |
 | Voice | Browser-compatible transcript flow, trigger phrase matching, simulated acoustic scoring |
@@ -88,6 +90,8 @@ flowchart TD
 | Module | Status |
 | --- | --- |
 | Episode logging, JWT auth, protected routes, risk scoring API | Implemented locally |
+| Google login/signup | Implemented with mock Google profile flow; real Google Identity credentials still require production wiring |
+| Optional 2FA | Implemented as a mock-email code challenge, configurable from Settings |
 | MongoDB models | Implemented; app also runs with in-memory fallback |
 | Python ML engine | Implemented with deterministic/synthetic scoring |
 | Mock AI calming provider | Implemented and used when no OpenAI/Gemini key exists |
@@ -180,7 +184,7 @@ Local static export check:
 $env:GITHUB_PAGES="true"; $env:NEXT_PUBLIC_STATIC_DEMO="true"; npm run build:pages
 ```
 
-GitHub Pages serves only static files. The hosted demo uses the browser-side mock API for auth, episode scoring, wearable simulation, voice stress, relapse risk, and mock SMS flows. If the URL is still 404 after the workflow succeeds, set GitHub Pages source to `Deploy from a branch` and choose `gh-pages` / root in repository settings. For the complete live system with Express, MongoDB, and the Python ML engine, use Docker locally or deploy the backend services to Render/Railway/AWS and set `NEXT_PUBLIC_API_URL` for the frontend.
+GitHub Pages serves only static files. The hosted demo uses the browser-side mock API for password auth, Google auth, 2FA, episode scoring, wearable simulation, voice stress, relapse risk, and mock SMS flows. If the URL is still 404 after the workflow succeeds, set GitHub Pages source to `Deploy from a branch` and choose `gh-pages` / root in repository settings. For the complete live system with Express, MongoDB, and the Python ML engine, use Docker locally or deploy the backend services to Render/Railway/AWS and set `NEXT_PUBLIC_API_URL` for the frontend.
 
 ## API Endpoints
 
@@ -190,8 +194,11 @@ Base URL: `http://localhost:5000/api`
 | --- | --- | --- |
 | GET | `/health` | Backend status and mock provider status |
 | POST | `/auth/register` | Register user and return JWT |
-| POST | `/auth/login` | Login and return JWT |
+| POST | `/auth/login` | Login and return JWT, or a 2FA challenge if enabled |
+| POST | `/auth/google` | Mock Google login/signup using a Google-style profile payload |
+| POST | `/auth/2fa/verify` | Verify a 2FA challenge and return JWT |
 | GET | `/me` | Current authenticated user |
+| PATCH | `/settings/security` | Update 2FA and module settings |
 | POST | `/contacts` | Create emergency contact |
 | GET | `/contacts` | List emergency contacts |
 | POST | `/predict` | Generate risk score without creating an episode |
@@ -274,8 +281,8 @@ Add screenshots after running the app locally:
 ## Deployment Notes
 
 - GitHub Pages frontend demo: `.github/workflows/pages.yml` builds `frontend/out` with `GITHUB_PAGES=true` and `NEXT_PUBLIC_STATIC_DEMO=true`, then publishes it to the `gh-pages` branch. This is a static demo, not a backend host.
-- Vercel frontend: deploy `frontend/`, set `NEXT_PUBLIC_API_URL` to the deployed backend URL and `NEXT_PUBLIC_ML_API_URL` if exposing ML directly.
-- Render/Railway backend: deploy the root repo, start with `node backend/src/server.js`, configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `ML_ENGINE_URL`, and provider secrets.
+- Vercel frontend: deploy `frontend/`, set `NEXT_PUBLIC_API_URL` to the deployed backend URL, `NEXT_PUBLIC_GOOGLE_CLIENT_ID` for real Google sign-in, and `NEXT_PUBLIC_ML_API_URL` if exposing ML directly.
+- Render/Railway backend: deploy the root repo, start with `node backend/src/server.js`, configure `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `ML_ENGINE_URL`, `GOOGLE_CLIENT_ID`, and provider secrets.
 - Render/Railway ML engine: start with `uvicorn app.main:app --app-dir ml-engine --host 0.0.0.0 --port $PORT`.
 - MongoDB Atlas: create a cluster, allow the backend host, create a least-privilege database user, and set `MONGO_URI`.
 - Docker/AWS: use `docker-compose.yml` for local orchestration or build separate images for ECS/EC2. Use AWS Secrets Manager or SSM Parameter Store for secrets.
@@ -308,6 +315,8 @@ The original planned wearable, voice, personalized adaptation, and relapse-risk 
 ## What Still Needs Production Setup
 
 - Real OpenAI or Gemini credentials for live AI calming responses.
+- Real Google Identity Services client ID and token verification for production Google OAuth.
+- Real email, authenticator app, or SMS delivery for production 2FA codes.
 - Real Twilio credentials and verified sender number for SMS.
 - Real Apple Health, Fitbit, and Samsung Health developer integrations, OAuth consent, and data permissions.
 - Production MongoDB Atlas database and backups.

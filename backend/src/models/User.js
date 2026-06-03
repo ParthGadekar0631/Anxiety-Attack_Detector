@@ -10,6 +10,9 @@ const UserSchema = new mongoose.Schema(
     voiceTriggerEnabled: { type: Boolean, default: true },
     wearableMonitoringEnabled: { type: Boolean, default: true },
     smsAlertsEnabled: { type: Boolean, default: true },
+    authProvider: { type: String, default: "password" },
+    googleId: { type: String, default: "" },
+    twoFactorEnabled: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

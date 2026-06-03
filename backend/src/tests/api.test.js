@@ -57,6 +57,60 @@ test("auth register/login and protected route", async () => {
   });
 });
 
+test("google auth creates an account and returns a JWT", async () => {
+  resetStore();
+  await withServer(async (baseUrl) => {
+    const google = await jsonFetch(`${baseUrl}/auth/google`, {
+      method: "POST",
+      body: JSON.stringify({
+        profile: {
+          email: "google-user@example.com",
+          name: "Google User",
+          sub: "mock-google-123",
+        },
+      }),
+    });
+
+    assert.equal(google.response.status, 201);
+    assert.ok(google.body.token);
+    assert.equal(google.body.user.email, "google-user@example.com");
+    assert.equal(google.body.user.authProvider, "google");
+  });
+});
+
+test("2FA can be enabled from settings and verified during login", async () => {
+  resetStore();
+  await withServer(async (baseUrl) => {
+    const token = await register(baseUrl);
+    const headers = { Authorization: `Bearer ${token}` };
+
+    const settings = await jsonFetch(`${baseUrl}/settings/security`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ twoFactorEnabled: true }),
+    });
+    assert.equal(settings.response.status, 200);
+    assert.equal(settings.body.user.twoFactorEnabled, true);
+
+    const login = await jsonFetch(`${baseUrl}/auth/login`, {
+      method: "POST",
+      body: JSON.stringify({ email: "test@example.com", password: "secret123" }),
+    });
+    assert.equal(login.response.status, 200);
+    assert.equal(login.body.requiresTwoFactor, true);
+    assert.ok(login.body.challengeId);
+    assert.match(login.body.devCode, /^\d{6}$/);
+
+    const verified = await jsonFetch(`${baseUrl}/auth/2fa/verify`, {
+      method: "POST",
+      body: JSON.stringify({ challengeId: login.body.challengeId, code: login.body.devCode }),
+    });
+    assert.equal(verified.response.status, 200);
+    assert.ok(verified.body.token);
+    assert.equal(verified.body.user.email, "test@example.com");
+  });
+});
+
 test("prediction route returns fallback-safe high risk output", async () => {
   resetStore();
   await withServer(async (baseUrl) => {

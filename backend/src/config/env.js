@@ -16,6 +16,7 @@ const env = {
   aiProvider: process.env.AI_PROVIDER || "mock",
   openAiApiKey: process.env.OPENAI_API_KEY || "",
   geminiApiKey: process.env.GEMINI_API_KEY || "",
+  googleClientId: process.env.GOOGLE_CLIENT_ID || "",
   smsProvider: process.env.SMS_PROVIDER || "mock",
   twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || "",
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || "",

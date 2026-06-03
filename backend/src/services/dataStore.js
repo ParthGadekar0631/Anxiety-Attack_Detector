@@ -8,6 +8,7 @@ const store = {
   wearableReadings: [],
   voiceSamples: [],
   emergencyActions: [],
+  twoFactorChallenges: [],
 };
 
 function now() {
